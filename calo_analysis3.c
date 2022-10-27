@@ -231,11 +231,32 @@ void calo_analysis3::Loop( bool verbose ) {
    TH2F* h_genparton_drb_vs_dra_sel2 = new TH2F( "h_genparton_drb_vs_dra_sel2", "Gen parton, DeltaR match with forward jet, sel2: 2 jets, jet eta>2.6, dphijj>pi/2", 40, -1., 7., 40, -1., 7. ) ;
    TH2F* h_genparton_drb_vs_dra_sel3 = new TH2F( "h_genparton_drb_vs_dra_sel3", "Gen parton, DeltaR match with forward jet, sel3: 2 jets, jet eta>2.6, dphijj>pi/2, no central Ht", 40, -1., 7., 40, -1., 7. ) ;
 
-   TH2F* h_myq2_vs_scale = new TH2F( "h_myq2_vs_scale", "My q2 calc vs Pythia scale", 100, 0., 20.,  100, 0., 20. ) ;
-   TH2F* h_myq2_vs_scale_q_g = new TH2F( "h_myq2_vs_scale_q_g", "My q2 calc vs Pythia scale, quark gluon", 100, 0., 20.,  100, 0., 20. ) ;
-   TH2F* h_myq2_vs_scale_g_g = new TH2F( "h_myq2_vs_scale_g_g", "My q2 calc vs Pythia scale, gluon gluon", 100, 0., 20.,  100, 0., 20. ) ;
-   TH2F* h_myq2_vs_scale_q_q = new TH2F( "h_myq2_vs_scale_q_q", "My q2 calc vs Pythia scale, quark quark", 100, 0., 20.,  100, 0., 20. ) ;
-   TH2F* h_myq2_vs_scale_q_qbar = new TH2F( "h_myq2_vs_scale_q_qbar", "My q2 calc vs Pythia scale, quark antiquark, same flavor", 100, 0., 20.,  100, 0., 20. ) ;
+   TH2F* h_myq2_vs_scale2 = new TH2F( "h_myq2_vs_scale2", "My q2 calc vs Pythia scale^2", 200, 0., 150.,  200, 0., 150. ) ;
+   TH2F* h_myq2_vs_scale2_q_g = new TH2F( "h_myq2_vs_scale2_q_g", "My q2 calc vs Pythia scale^2, quark gluon", 200, 0., 150.,  200, 0., 150. ) ;
+   TH2F* h_myq2_vs_scale2_g_g = new TH2F( "h_myq2_vs_scale2_g_g", "My q2 calc vs Pythia scale^2, gluon gluon", 200, 0., 150.,  200, 0., 150. ) ;
+   TH2F* h_myq2_vs_scale2_q_q = new TH2F( "h_myq2_vs_scale2_q_q", "My q2 calc vs Pythia scale^2, quark quark", 200, 0., 150.,  200, 0., 150. ) ;
+   TH2F* h_myq2_vs_scale2_q_qbar = new TH2F( "h_myq2_vs_scale2_q_qbar", "My q2 calc vs Pythia scale^2, quark antiquark, same flavor", 200, 0., 150.,  200, 0., 150. ) ;
+
+   TH2F* h_myq2_vs_scale2_zoom = new TH2F( "h_myq2_vs_scale2_zoom", "My q2 calc vs Pythia scale^2", 100, 0., 20.,  100, 0., 20. ) ;
+
+
+   TH2F* h_log10x2_vs_Pperp = new TH2F( "h_log10x2_vs_Pperp", "log10(x2) vs Pperp", 40, 0., 6.,  40, -4., 1. ) ;
+
+   TH2F* h_jet0_eta_vs_pt_all = new TH2F( "h_jet0_eta_vs_pt_all", "jet0, eta vs pt, all", 40, 1.5, 8.,  40, 2.2, 4.3 ) ;
+   TH2F* h_jet0_eta_vs_pt_gm = new TH2F( "h_jet0_eta_vs_pt_gm", "jet0, eta vs pt, gen matched", 40, 1.5, 8.,  40, 2.2, 4.3 ) ;
+
+   TH2F* h_jet1_eta_vs_pt_all = new TH2F( "h_jet1_eta_vs_pt_all", "jet1, eta vs pt, all", 40, 1.5, 8.,  40, 2.2, 4.3 ) ;
+   TH2F* h_jet1_eta_vs_pt_gm = new TH2F( "h_jet1_eta_vs_pt_gm", "jet1, eta vs pt, gen matched", 40, 1.5, 8.,  40, 2.2, 4.3 ) ;
+
+
+   TH2F* h_q2_vs_log10x2 = new TH2F( "h_log10q2_vs_log10x2", "Q2 vs x2", 40, -4., 1., 40, -1, 4 ) ;
+   TH2F* h_q2_vs_log10x2_gm = new TH2F( "h_log10q2_vs_log10x2_gm", "Q2 vs x2, jets gen matched", 40, -4., 1., 40, -1, 4 ) ;
+   TH2F* h_q2_vs_log10x2_gm_pm = new TH2F( "h_log10q2_vs_log10x2_gm_pm", "Q2 vs x2, jets gen matched, parton matched", 40, -4., 1., 40, -1, 4 ) ;
+   TH2F* h_q2_vs_log10x2_pm = new TH2F( "h_log10q2_vs_log10x2_pm", "Q2 vs x2, jets parton matched", 40, -4., 1., 40, -1, 4 ) ;
+
+
+   TH2F* h_j0_pzrec_vs_pzgen = new TH2F( "h_j0_pzrec_vs_pzgen", "jet0, pz rec vs pz gen", 40, 0., 80., 40, 0., 80. ) ;
+   TH2F* h_j0_etagt3_pzrec_vs_pzgen = new TH2F( "h_j0_etagt3_pzrec_vs_pzgen", "jet0, eta>3, pz rec vs pz gen", 40, 0., 80., 40, 0., 80. ) ;
 
 
    Long64_t nentries = fChain->GetEntries();
@@ -272,6 +293,11 @@ void calo_analysis3::Loop( bool verbose ) {
          tsw.Start() ;
          tsw_loop.Start() ;
       }
+
+      //****************
+    //if ( Particle_PT[4] < 5.0 ) continue ; //--- simulate pthat > 5
+      if ( Particle_PT[4] < 1.8 ) continue ; //--- simulate pthat > 1.8
+      //****************
 
      if ( verbose ) {
 
@@ -406,6 +432,8 @@ void calo_analysis3::Loop( bool verbose ) {
             dr1 = calc_dR( Jet05_Phi[1], Particle_Phi[4], Jet05_Eta[1], Particle_Eta[4] ) ;
             if ( dr0 < dr1 ) { gpb_dr = dr0 ; } else { gpb_dr = dr1 ; }
          }
+         bool has_2gpm(false) ;
+         if ( gpa_dr < 1.0 && gpb_dr < 1.0 ) has_2gpm = true ;
 
 
          int ind_gp0(0) ;
@@ -503,19 +531,17 @@ void calo_analysis3::Loop( bool verbose ) {
             printf("   Q2 = %8.3f,  Q = %8.3f   Event.Scale = %8.3f   Event.ScalePDF = %8.3f  alphaQCD = %9.5f\n", Q2_1, sqrt(fabs(Q2_1)), Event_Scale[0], Event_ScalePDF[0], Event_AlphaQCD[0] ) ;
          }
 
-         h_myq2_vs_scale -> Fill( Event_Scale[0], sqrt(fabs(Q2_1)) ) ;
+         h_myq2_vs_scale2 -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1) ) ;
+         h_myq2_vs_scale2_zoom -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1) ) ;
 
-         if ( (abs(Event_ID1[0]) < 7 && abs(Event_ID2[0]) > 20) || (abs(Event_ID2[0]) < 7 && abs(Event_ID1[0]) > 20) ) h_myq2_vs_scale_q_g -> Fill( Event_Scale[0], sqrt(fabs(Q2_1)) ) ;
-         if ( (abs(Event_ID1[0]) > 20 && abs(Event_ID2[0]) > 20) ) h_myq2_vs_scale_g_g -> Fill( Event_Scale[0], sqrt(fabs(Q2_1)) ) ;
-         if ( Event_ID1[0] < 7 && Event_ID2[0] < 7 && Event_ID1[0] > 0 && Event_ID2[0] > 0  ) h_myq2_vs_scale_q_q -> Fill( Event_Scale[0], sqrt(fabs(Q2_1)) ) ;
-         if ( abs(Event_ID1[0]) == abs(Event_ID2[0]) && abs(Event_ID1[0]) < 7 && Event_ID1[0] * Event_ID2[0] < 0 ) h_myq2_vs_scale_q_qbar -> Fill( Event_Scale[0], sqrt(fabs(Q2_1)) ) ;
+         if ( (abs(Event_ID1[0]) < 7 && abs(Event_ID2[0]) > 20) || (abs(Event_ID2[0]) < 7 && abs(Event_ID1[0]) > 20) ) h_myq2_vs_scale2_q_g -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
+         if ( (abs(Event_ID1[0]) > 20 && abs(Event_ID2[0]) > 20) ) h_myq2_vs_scale2_g_g -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
+         if ( Event_ID1[0] < 7 && Event_ID2[0] < 7 && Event_ID1[0] > 0 && Event_ID2[0] > 0  ) h_myq2_vs_scale2_q_q -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
+         if ( abs(Event_ID1[0]) == abs(Event_ID2[0]) && abs(Event_ID1[0]) < 7 && Event_ID1[0] * Event_ID2[0] < 0 ) h_myq2_vs_scale2_q_qbar -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
 
 
-      //****************
-    //if ( Particle_PT[4] < 5.0 ) continue ; //--- simulate pthat > 5
-      //****************
 
-         if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) {
+         if ( Jet05_PT[0] > 3.5 && Jet05_PT[1] > 3.5 ) {
 
             h_log10x2_vs_log10x1_sel0 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
             h_genparton_etab_vs_etaa_sel0 -> Fill( gpa_eta, gpb_eta ) ;
@@ -567,6 +593,20 @@ void calo_analysis3::Loop( bool verbose ) {
 
             float dphi_Pperp_qperp = calc_dphi( phi_Pperp, phi_qperp ) ;
 
+            h_log10x2_vs_Pperp -> Fill( Pperp, log10(Event_X2[0]) ) ;
+
+            h_jet0_eta_vs_pt_all -> Fill( Jet05_PT[0], Jet05_Eta[0] ) ;
+            if ( gj0dr < 0.3 ) h_jet0_eta_vs_pt_gm -> Fill( Jet05_PT[0], Jet05_Eta[0] ) ;
+
+            h_jet1_eta_vs_pt_all -> Fill( Jet05_PT[1], Jet05_Eta[1] ) ;
+            if ( gj1dr < 0.3 ) h_jet1_eta_vs_pt_gm -> Fill( Jet05_PT[1], Jet05_Eta[1] ) ;
+
+            h_q2_vs_log10x2 -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
+            if ( has_2gjm ) h_q2_vs_log10x2_gm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
+            if ( has_2gjm && has_2gpm ) h_q2_vs_log10x2_gm_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
+            if ( has_2gpm ) h_q2_vs_log10x2_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
+
+
             if ( qperp / Pperp < 1000000000000000 ) {
 
                h_r2j_rec_dphi_all -> Fill( rec_dphi ) ;
@@ -574,6 +614,7 @@ void calo_analysis3::Loop( bool verbose ) {
                h_r2j_gm1dr -> Fill( gj1dr ) ;
 
                if ( has_2gjm ) {
+
 
                   h_r2j_rec_dphi_2gjm -> Fill( rec_dphi ) ;
                   float phi0_recmgen = calc_dphi( Jet05_Phi[0], GenJet05_Phi[ind_gj0] ) ;
@@ -594,9 +635,13 @@ void calo_analysis3::Loop( bool verbose ) {
 
                   float genjet0px = GenJet05_PT[ind_gj0]*cos(GenJet05_Phi[ind_gj0]) ;
                   float genjet0py = GenJet05_PT[ind_gj0]*sin(GenJet05_Phi[ind_gj0]) ;
+                  float genjet0theta = theta_from_eta( GenJet05_Eta[ind_gj0] ) ;
+                  float genjet0pz = GenJet05_PT[ind_gj0] / tan(genjet0theta) ;
 
                   float genjet1px = GenJet05_PT[ind_gj1]*cos(GenJet05_Phi[ind_gj1]) ;
                   float genjet1py = GenJet05_PT[ind_gj1]*sin(GenJet05_Phi[ind_gj1]) ;
+                  float genjet1theta = theta_from_eta( GenJet05_Eta[ind_gj1] ) ;
+                  float genjet1pz = GenJet05_PT[ind_gj1] / tan(genjet0theta) ;
 
                   float genPperpx = 0.5 * ( genjet0px - genjet1px ) * Pperp_random_sign ;
                   float genPperpy = 0.5 * ( genjet0py - genjet1py ) * Pperp_random_sign ;
@@ -614,6 +659,10 @@ void calo_analysis3::Loop( bool verbose ) {
                   float dphi_Pperp_qperp_recmgen = calc_dphi( dphi_Pperp_qperp, dphi_genPperp_genqperp ) ;
 
 
+
+
+                  h_j0_pzrec_vs_pzgen -> Fill( jet0pz, genjet0pz ) ;
+                  if ( Jet05_Eta[0] > 3.0 ) h_j0_etagt3_pzrec_vs_pzgen -> Fill( jet0pz, genjet0pz ) ;
 
                   h_r2j_Pperp -> Fill( Pperp ) ;
                   h_r2j_qperp -> Fill( qperp ) ;

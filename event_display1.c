@@ -143,8 +143,8 @@ void event_display1::Loop()
       if ( Jet05_Eta[0] < 2.6 ) continue ;
       if ( Jet05_Eta[1] < 2.6 ) continue ;
 
-      if ( Jet05_PT[0] < 4.0 ) continue ;
-      if ( Jet05_PT[1] < 4.0 ) continue ;
+      if ( Jet05_PT[0] < 3.0 ) continue ;
+      if ( Jet05_PT[1] < 3.0 ) continue ;
 
       float rec_dphi = calc_dphi( Jet05_Phi[0], Jet05_Phi[1] ) ;
 

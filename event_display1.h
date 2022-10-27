@@ -628,7 +628,8 @@ event_display1::event_display1(TTree *tree) : fChain(0)
    //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-21a/*.root") ;
    //ch->Add("../../delphes/delphes/output-rjf-pthat0.0-jpt2.0-allgp-30x10M-2022-10-22a/*.root") ;
    //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23a/*.root") ;
-   ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-allgp-30x50M-2022-10-18a/*.root") ;
+   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-allgp-30x50M-2022-10-18a/*.root") ;
+   ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-21a/*.root") ;
 
    tree = ch ;
 
