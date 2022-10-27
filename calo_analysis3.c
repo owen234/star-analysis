@@ -254,6 +254,11 @@ void calo_analysis3::Loop( bool verbose ) {
    TH2F* h_q2_vs_log10x2_gm_pm = new TH2F( "h_log10q2_vs_log10x2_gm_pm", "Q2 vs x2, jets gen matched, parton matched", 40, -4., 1., 40, -1, 4 ) ;
    TH2F* h_q2_vs_log10x2_pm = new TH2F( "h_log10q2_vs_log10x2_pm", "Q2 vs x2, jets parton matched", 40, -4., 1., 40, -1, 4 ) ;
 
+   TH2F* h_log10x2_vs_log10x1 = new TH2F( "h_log10log10x2_vs_log10x1", "log10x2 vs x2", 40, -4., 1., 40, -4, 1 ) ;
+   TH2F* h_log10x2_vs_log10x1_gm = new TH2F( "h_log10log10x2_vs_log10x1_gm", "log10x2 vs x2, jets gen matched", 40, -4., 1., 40, -4, 1 ) ;
+   TH2F* h_log10x2_vs_log10x1_gm_pm = new TH2F( "h_log10log10x2_vs_log10x1_gm_pm", "log10x2 vs x2, jets gen matched, parton matched", 40, -4., 1., 40, -4, 1 ) ;
+   TH2F* h_log10x2_vs_log10x1_pm = new TH2F( "h_log10log10x2_vs_log10x1_pm", "log10x2 vs x2, jets parton matched", 40, -4., 1., 40, -4, 1 ) ;
+
 
    TH2F* h_j0_pzrec_vs_pzgen = new TH2F( "h_j0_pzrec_vs_pzgen", "jet0, pz rec vs pz gen", 40, 0., 80., 40, 0., 80. ) ;
    TH2F* h_j0_etagt3_pzrec_vs_pzgen = new TH2F( "h_j0_etagt3_pzrec_vs_pzgen", "jet0, eta>3, pz rec vs pz gen", 40, 0., 80., 40, 0., 80. ) ;
@@ -513,23 +518,23 @@ void calo_analysis3::Loop( bool verbose ) {
          TLorentzVector tlv2_Q = tlv_parton2_in - tlv_parton2_out ;
          double Q2_1 = tlv1_Q.Dot( tlv1_Q ) ;
          double Q2_2 = tlv2_Q.Dot( tlv2_Q ) ;
-         if ( jentry < 1000 ) {
-            printf("\n\n Event %lld\n", jentry ) ;
-            printf("  parton1 in  : " ) ;
-            tlv_parton1_in.Print() ;
-            printf("  parton1 out : " ) ;
-            tlv_parton1_out.Print() ;
-            printf("  parton2 in  : " ) ;
-            tlv_parton2_in.Print() ;
-            printf("  parton2 out : " ) ;
-            tlv_parton2_out.Print() ;
-            printf("  Q from 1    : " ) ;
-            tlv1_Q.Print() ;
-            printf("  Q from 2    : " ) ;
-            tlv1_Q.Print() ;
-            printf("   ID1 = %d   ID2 = %d   x1 = %7.4f  x2 = %7.4f\n", Particle_PID[4], Particle_PID[5], Event_X1[0], Event_X2[0] ) ;
-            printf("   Q2 = %8.3f,  Q = %8.3f   Event.Scale = %8.3f   Event.ScalePDF = %8.3f  alphaQCD = %9.5f\n", Q2_1, sqrt(fabs(Q2_1)), Event_Scale[0], Event_ScalePDF[0], Event_AlphaQCD[0] ) ;
-         }
+      // if ( jentry < 1000 ) {
+      //    printf("\n\n Event %lld\n", jentry ) ;
+      //    printf("  parton1 in  : " ) ;
+      //    tlv_parton1_in.Print() ;
+      //    printf("  parton1 out : " ) ;
+      //    tlv_parton1_out.Print() ;
+      //    printf("  parton2 in  : " ) ;
+      //    tlv_parton2_in.Print() ;
+      //    printf("  parton2 out : " ) ;
+      //    tlv_parton2_out.Print() ;
+      //    printf("  Q from 1    : " ) ;
+      //    tlv1_Q.Print() ;
+      //    printf("  Q from 2    : " ) ;
+      //    tlv1_Q.Print() ;
+      //    printf("   ID1 = %d   ID2 = %d   x1 = %7.4f  x2 = %7.4f\n", Particle_PID[4], Particle_PID[5], Event_X1[0], Event_X2[0] ) ;
+      //    printf("   Q2 = %8.3f,  Q = %8.3f   Event.Scale = %8.3f   Event.ScalePDF = %8.3f  alphaQCD = %9.5f\n", Q2_1, sqrt(fabs(Q2_1)), Event_Scale[0], Event_ScalePDF[0], Event_AlphaQCD[0] ) ;
+      // }
 
          h_myq2_vs_scale2 -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1) ) ;
          h_myq2_vs_scale2_zoom -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1) ) ;
@@ -605,6 +610,11 @@ void calo_analysis3::Loop( bool verbose ) {
             if ( has_2gjm ) h_q2_vs_log10x2_gm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
             if ( has_2gjm && has_2gpm ) h_q2_vs_log10x2_gm_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
             if ( has_2gpm ) h_q2_vs_log10x2_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
+
+            h_log10x2_vs_log10x1 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
+            if ( has_2gjm ) h_log10x2_vs_log10x1_gm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
+            if ( has_2gjm && has_2gpm ) h_log10x2_vs_log10x1_gm_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
+            if ( has_2gpm ) h_log10x2_vs_log10x1_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
 
 
             if ( qperp / Pperp < 1000000000000000 ) {

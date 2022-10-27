@@ -660,6 +660,8 @@ calo_analysis3::calo_analysis3(TTree *tree) : fChain(0)
      ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26d/*.root") ;
      ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26e/*.root") ;
      ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-27a/*.root") ;
+     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27b/*.root") ;
+     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27c/*.root") ;
  //---------
 
    tree = ch ;
