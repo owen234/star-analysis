@@ -646,23 +646,38 @@ calo_analysis3::calo_analysis3(TTree *tree) : fChain(0)
    //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-21a/*.root") ;
    //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-30x5M-2022-10-22a/*.root") ;
  //---------
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23a/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23b/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-50x50M-2022-10-24a/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-24b/*.root") ;
+///  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23a/*.root") ;
+///  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23b/*.root") ;
+///  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-50x50M-2022-10-24a/*.root") ;
+///  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-24b/*.root") ;
  //---------
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x40M-2022-10-25a/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-25b/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-25c/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-26a/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26b/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26c/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26d/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26e/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-27a/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27b/*.root") ;
-     ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27c/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x40M-2022-10-25a/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-25b/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-25c/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-26a/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26b/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26c/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26d/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26e/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-27a/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27b/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27c/*.root") ;
+  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27d/*.root") ;
  //---------
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-28a/*.root") ;
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28b/*.root") ;
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28c/*.root") ;
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28d/*.root") ;
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28e/*.root") ;
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28f/*.root") ;
+ //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-29a/*.root") ;
+ //---------
+
+       ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0-rjpt2-gjpt1-30x1M-2022-10-29a/*.root") ;
+     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5-rjpt2-gjpt1-30x1M-2022-10-29a/*.root") ;
+
+ //---------
+
 
    tree = ch ;
 
