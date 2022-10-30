@@ -5,8 +5,8 @@
 // found on file: ../../delphes/delphes/test1f.root
 //////////////////////////////////////////////////////////
 
-#ifndef calo_analysis3_h
-#define calo_analysis3_h
+#ifndef calo_analysis4_h
+#define calo_analysis4_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -16,7 +16,7 @@
 #include "TClonesArray.h"
 #include "TObject.h"
 
-class calo_analysis3 {
+class calo_analysis4 {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -606,12 +606,19 @@ public :
    TBranch        *b_Jet10_Area;   //!
    TBranch        *b_Jet10_size;   //!
 
-   calo_analysis3(TTree *tree=0);
-   virtual ~calo_analysis3();
+   char dset_name[1000] ;
+   float dset_pthatmin ;
+   float dset_pthatmax ;
+   float dset_total_pp_xsec_mb ;
+   float dset_ngen0_mc ;
+   float dset_pp_weight_per_ipb ;
+
+   calo_analysis4(const char* arg_dset_name = "pthat-1.8-cut-to-1.8to3.0");
+   virtual ~calo_analysis4();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
-   virtual void     Init(TTree *tree);
+   virtual void     Init( TTree *tree );
    virtual void     Loop( bool verbose=false );
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
@@ -619,94 +626,202 @@ public :
 
 #endif
 
-#ifdef calo_analysis3_cxx
-calo_analysis3::calo_analysis3(TTree *tree) : fChain(0) 
+#ifdef calo_analysis4_cxx
+calo_analysis4::calo_analysis4( const char* arg_dset_name ) : fChain(0) 
 {
 
    TChain* ch = new TChain("Delphes") ;
- //-----------
- //ch->Add("../../delphes/delphes/output-30x10M-2022-10-13a/*.root") ;
- //ch->Add("../../delphes/delphes/output-30x30M-2022-10-13a/*.root") ;
- //ch->Add("../../delphes/delphes/output-30x80M-2022-10-14a/*.root") ;
- //-----------
-   //ch->Add("../../delphes/delphes/output-30x10M-pthat2.0-2022-10-14a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-30x1M-pthat5.0-2022-10-14a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-30x1M-pthat10.0-2022-10-14a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-30x20M-pthat5.0-2022-10-14a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-rjf-pthat5.0-30x1M-2022-10-15a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-rjf-pthat5.0-30x3M-2022-10-15a/*.root") ;
- //----------
-   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-30x3M-2022-10-15a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-30x40M-2022-10-16a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-allgp-30x50M-2022-10-18a/*.root") ;
-   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-19a/*.root") ;
- ////ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt2-allgp-30x10M-2022-10-22a/*.root") ;
- //---------
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt2-allgp-30x10M-2022-10-21a/*.root") ;
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-21a/*.root") ;
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-30x5M-2022-10-22a/*.root") ;
- //---------
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23a/*.root") ;
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23b/*.root") ;
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-50x50M-2022-10-24a/*.root") ;
- //  ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-24b/*.root") ;
- //---------
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x40M-2022-10-25a/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-25b/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-25c/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-26a/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26b/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26c/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26d/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-26e/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x30M-2022-10-27a/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27b/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27c/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-jpt3-30x10M-2022-10-27d/*.root") ;
- //---------
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-28a/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28b/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28c/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28d/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28e/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28f/*.root") ;
-  // ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-29a/*.root") ;
- //---------
-  //   ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0-rjpt2-gjpt1-30x1M-2022-10-29a/*.root") ;
-  //   ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0-rjpt2-gjpt1-30x10M-2022-10-29b/*.root") ;
- //---------
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5-rjpt2-gjpt1-30x1M-2022-10-29a/*.root") ;
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5-rjpt2-gjpt1-30x10M-2022-10-29b/*.root") ;
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5-rjpt2-gjpt1-30x10M-2022-10-29c/*.root") ;
- //---------
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x1M-2022-10-29a/*.root") ;
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x10M-2022-10-29b/*.root") ;
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x40M-2022-10-30a/*.root") ;
- //---------
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5to1.0-rjpt3-gjpt2-30x1M-2022-10-29a/*.root") ;
-     //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5to1.0-rjpt3-gjpt2-30x10M-2022-10-30a/*.root") ;
- //---------
-       ch->Add("../../delphes/delphes/output-rjf-2jR-pthat3.0to5.0-rjpt3-gjpt2-30x10M-2022-10-30a/*.root") ;
- //---------
 
-   tree = ch ;
+   TTree* tree(0x0) ;
+
+   dset_pthatmin = 0. ;
+   dset_pthatmax = -1. ;
+   dset_total_pp_xsec_mb = -1. ;
+   dset_ngen0_mc = 0 ;
+
+
+
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+   if ( strcmp( arg_dset_name, "pthat-0.5to1.0" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5to1.0-rjpt3-gjpt2-30x1M-2022-10-29a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.5to1.0-rjpt3-gjpt2-30x10M-2022-10-30a/*.root") ;
+
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 0.33e9 ;
+      dset_total_pp_xsec_mb = 1616.0 ;
+      dset_pthatmin = 0.5 ;
+      dset_pthatmax = 1.0 ;
+
+      tree = ch ;
+
+   }
+
+
+
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+   if ( strcmp( arg_dset_name, "pthat-1.0to1.8" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x10M-2022-10-29b/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x1M-2022-10-29a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x40M-2022-10-30a/*.root") ;
+
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 1.49e9 ;
+      dset_total_pp_xsec_mb = 93.5 ;
+      dset_pthatmin = 1.0 ;
+      dset_pthatmax = 1.8 ;
+
+      tree = ch ;
+
+   }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+// if ( strcmp( arg_dset_name, "pthat-1.0-cut-to-1.0to1.8" ) == 0 ) {
+
+//    int nfiles(0) ;
+
+//    nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23a/*.root") ; // 1350000004
+//    nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23b/*.root") ; // 1400000002
+//    nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-50x50M-2022-10-24a/*.root") ; // 1950000004
+//    nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-24b/*.root") ; // 1300000002
+
+
+//    printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+//    dset_ngen0_mc = 6.01e9 ;
+//    dset_total_pp_xsec_mb = 113.7 ;
+//    dset_pthatmin = 1.0 ;
+//    dset_pthatmax = 1.8 ;
+
+//    tree = ch ;
+
+// }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+   if ( strcmp( arg_dset_name, "pthat-1.8-cut-to-1.8to3.0" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-28a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28b/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28c/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28d/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28e/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x10M-2022-10-28f/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-29a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-30x30M-2022-10-29b/*.root") ;
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 3.14e9 ;
+      dset_total_pp_xsec_mb = 19.65 ;
+      dset_pthatmin = 1.8 ;
+      dset_pthatmax = 3.0 ;
+
+      tree = ch ;
+
+   }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+   if ( strcmp( arg_dset_name, "pthat-3.0to5.0" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat3.0to5.0-rjpt3-gjpt2-30x10M-2022-10-30a/*.root") ;
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 0.29e9 ;
+      dset_total_pp_xsec_mb = 2.19 ;
+      dset_pthatmin = 3.0 ;
+      dset_pthatmax = 5.0 ;
+
+      tree = ch ;
+
+   }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+   if ( strcmp( arg_dset_name, "pthat-5.0" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-30x40M-2022-10-16a/*.root") ;
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 0.52e9 ;
+      dset_total_pp_xsec_mb = 0.218 ;
+      dset_pthatmin = 5.0 ;
+      dset_pthatmax = 999.0 ;
+
+      tree = ch ;
+
+   }
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+   if ( dset_total_pp_xsec_mb < 0 ) {
+      printf("\n\n *** unknown dataset: %s\n\n", arg_dset_name ) ;
+      gSystem -> Exit(-1) ;
+   }
+
+   sprintf( dset_name, "%s", arg_dset_name ) ;
+
+   dset_pp_weight_per_ipb = dset_total_pp_xsec_mb * 1e9 / dset_ngen0_mc ;
+
+   int nentries = tree -> GetEntries() ;
+   printf("\n\n") ;
+   printf("  Number of PHTHIA events generated in dataset: %.0f\n", dset_ngen0_mc ) ;
+   printf("  Number of entries in chain: %d\n", nentries ) ;
+   printf("  Pthat range:  %.1f to %.1f\n", dset_pthatmin, dset_pthatmax ) ;
+   printf("  total pp MC cross section  %.3f mb\n", dset_total_pp_xsec_mb ) ;
+   printf("  pp weight per 1/pb:  %.3f\n", dset_pp_weight_per_ipb )  ;
+
+   printf("\n\n\n") ;
+
 
    Init(tree);
 }
 
-calo_analysis3::~calo_analysis3()
+
+
+
+
+
+calo_analysis4::~calo_analysis4()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
 }
 
-Int_t calo_analysis3::GetEntry(Long64_t entry)
+Int_t calo_analysis4::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t calo_analysis3::LoadTree(Long64_t entry)
+Long64_t calo_analysis4::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -719,7 +834,7 @@ Long64_t calo_analysis3::LoadTree(Long64_t entry)
    return centry;
 }
 
-void calo_analysis3::Init(TTree *tree)
+void calo_analysis4::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -1023,7 +1138,7 @@ void calo_analysis3::Init(TTree *tree)
    Notify();
 }
 
-Bool_t calo_analysis3::Notify()
+Bool_t calo_analysis4::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1034,18 +1149,18 @@ Bool_t calo_analysis3::Notify()
    return kTRUE;
 }
 
-void calo_analysis3::Show(Long64_t entry)
+void calo_analysis4::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t calo_analysis3::Cut(Long64_t entry)
+Int_t calo_analysis4::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef calo_analysis3_cxx
+#endif // #ifdef calo_analysis4_cxx

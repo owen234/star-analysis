@@ -1,5 +1,5 @@
-#define calo_analysis3_cxx
-#include "calo_analysis3.h"
+#define calo_analysis4_cxx
+#include "calo_analysis4.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -113,7 +113,7 @@ bool inside_fiducial( float eta, float phi ) {
 }
 
 
-void calo_analysis3::Loop( bool verbose ) {
+void calo_analysis4::Loop( bool verbose ) {
 
    TStopwatch tsw ;
    tsw.Start() ;
@@ -442,6 +442,10 @@ void calo_analysis3::Loop( bool verbose ) {
 
    //nentries = 1000000 ;
 
+   float weight = dset_pp_weight_per_ipb ;
+
+   printf("\n\n  Pthat range:  %.1f to %.1f\n\n\n", dset_pthatmin, dset_pthatmax ) ;
+
    Long64_t nbytes = 0, nb = 0;
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
 
@@ -450,6 +454,7 @@ void calo_analysis3::Loop( bool verbose ) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
       nb = fChain->GetEntry(jentry);   nbytes += nb;
+
 
       if ( !verbose && ei%100 == 0 ) {
          tsw.Stop() ;
@@ -465,6 +470,14 @@ void calo_analysis3::Loop( bool verbose ) {
          tsw.Start() ;
          tsw_loop.Start() ;
       }
+
+
+    //********** cut on pthat for this dataset
+      if ( Particle_PT[4] < dset_pthatmin ) continue ;
+      if ( Particle_PT[4] > dset_pthatmax ) continue ;
+    //********** cut on pthat for this dataset
+
+
 
       //****************
     //if ( Particle_PT[4] < 5.0 ) continue ; //--- simulate pthat > 5
@@ -654,11 +667,11 @@ void calo_analysis3::Loop( bool verbose ) {
             if ( Jet05_PT[ji] > 6.0 ) njets_rec_pt6++ ;
          } // ji
 
-         h_njets_rec_vs_gen -> Fill( GenJet05_, Jet05_ ) ;
-         h_njets_pt3_rec_vs_gen -> Fill( njets_gen_pt3, njets_rec_pt3 ) ;
-         h_njets_pt4_rec_vs_gen -> Fill( njets_gen_pt4, njets_rec_pt4 ) ;
-         h_njets_pt5_rec_vs_gen -> Fill( njets_gen_pt5, njets_rec_pt5 ) ;
-         h_njets_pt6_rec_vs_gen -> Fill( njets_gen_pt6, njets_rec_pt6 ) ;
+         h_njets_rec_vs_gen -> Fill( GenJet05_, Jet05_, weight ) ;
+         h_njets_pt3_rec_vs_gen -> Fill( njets_gen_pt3, njets_rec_pt3, weight ) ;
+         h_njets_pt4_rec_vs_gen -> Fill( njets_gen_pt4, njets_rec_pt4, weight ) ;
+         h_njets_pt5_rec_vs_gen -> Fill( njets_gen_pt5, njets_rec_pt5, weight ) ;
+         h_njets_pt6_rec_vs_gen -> Fill( njets_gen_pt6, njets_rec_pt6, weight ) ;
 
          bool has_2gjm(false) ;
          if ( ind_gj0>=0 && ind_gj1>=0 && ind_gj0!=ind_gj1 && gj0dr<0.3 && gj1dr<0.3 ) has_2gjm = true ;
@@ -703,39 +716,39 @@ void calo_analysis3::Loop( bool verbose ) {
       //    printf("   Q2 = %8.3f,  Q = %8.3f   Event.Scale = %8.3f   Event.ScalePDF = %8.3f  alphaQCD = %9.5f\n", Q2_1, sqrt(fabs(Q2_1)), Event_Scale[0], Event_ScalePDF[0], Event_AlphaQCD[0] ) ;
       // }
 
-         h_myq2_vs_scale2 -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1) ) ;
-         h_myq2_vs_scale2_zoom -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1) ) ;
+         h_myq2_vs_scale2 -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1), weight ) ;
+         h_myq2_vs_scale2_zoom -> Fill( Event_Scale[0]*Event_Scale[0], fabs(Q2_1), weight ) ;
 
-         if ( (abs(Event_ID1[0]) < 7 && abs(Event_ID2[0]) > 20) || (abs(Event_ID2[0]) < 7 && abs(Event_ID1[0]) > 20) ) h_myq2_vs_scale2_q_g -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
-         if ( (abs(Event_ID1[0]) > 20 && abs(Event_ID2[0]) > 20) ) h_myq2_vs_scale2_g_g -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
-         if ( Event_ID1[0] < 7 && Event_ID2[0] < 7 && Event_ID1[0] > 0 && Event_ID2[0] > 0  ) h_myq2_vs_scale2_q_q -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
-         if ( abs(Event_ID1[0]) == abs(Event_ID2[0]) && abs(Event_ID1[0]) < 7 && Event_ID1[0] * Event_ID2[0] < 0 ) h_myq2_vs_scale2_q_qbar -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)) ) ;
+         if ( (abs(Event_ID1[0]) < 7 && abs(Event_ID2[0]) > 20) || (abs(Event_ID2[0]) < 7 && abs(Event_ID1[0]) > 20) ) h_myq2_vs_scale2_q_g -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)), weight ) ;
+         if ( (abs(Event_ID1[0]) > 20 && abs(Event_ID2[0]) > 20) ) h_myq2_vs_scale2_g_g -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)), weight ) ;
+         if ( Event_ID1[0] < 7 && Event_ID2[0] < 7 && Event_ID1[0] > 0 && Event_ID2[0] > 0  ) h_myq2_vs_scale2_q_q -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)), weight ) ;
+         if ( abs(Event_ID1[0]) == abs(Event_ID2[0]) && abs(Event_ID1[0]) < 7 && Event_ID1[0] * Event_ID2[0] < 0 ) h_myq2_vs_scale2_q_qbar -> Fill( Event_Scale[0]*Event_Scale[0], (fabs(Q2_1)), weight ) ;
 
 
 
          if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) {
 
-            h_log10x2_vs_log10x1_sel0 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-            h_genparton_etab_vs_etaa_sel0 -> Fill( gpa_eta, gpb_eta ) ;
-            h_genparton_drb_vs_dra_sel0 -> Fill( gpa_dr, gpb_dr ) ;
+            h_log10x2_vs_log10x1_sel0 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+            h_genparton_etab_vs_etaa_sel0 -> Fill( gpa_eta, gpb_eta, weight ) ;
+            h_genparton_drb_vs_dra_sel0 -> Fill( gpa_dr, gpb_dr, weight ) ;
 
             if ( Jet05_Eta[0]>2.6 && Jet05_Eta[1]>2.6 ) {
 
-               h_log10x2_vs_log10x1_sel1 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-               h_genparton_etab_vs_etaa_sel1 -> Fill( gpa_eta, gpb_eta ) ;
-               h_genparton_drb_vs_dra_sel1 -> Fill( gpa_dr, gpb_dr ) ;
+               h_log10x2_vs_log10x1_sel1 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+               h_genparton_etab_vs_etaa_sel1 -> Fill( gpa_eta, gpb_eta, weight ) ;
+               h_genparton_drb_vs_dra_sel1 -> Fill( gpa_dr, gpb_dr, weight ) ;
 
                if ( fabs(rec_dphi)>3.14159265/2. ) {
 
-                  h_log10x2_vs_log10x1_sel2 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-                  h_genparton_etab_vs_etaa_sel2 -> Fill( gpa_eta, gpb_eta ) ;
-                  h_genparton_drb_vs_dra_sel2 -> Fill( gpa_dr, gpb_dr ) ;
+                  h_log10x2_vs_log10x1_sel2 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+                  h_genparton_etab_vs_etaa_sel2 -> Fill( gpa_eta, gpb_eta, weight ) ;
+                  h_genparton_drb_vs_dra_sel2 -> Fill( gpa_dr, gpb_dr, weight ) ;
 
                   if ( genjetht_eta1 < 0.1 ) {
 
-                     h_log10x2_vs_log10x1_sel3 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-                     h_genparton_etab_vs_etaa_sel3 -> Fill( gpa_eta, gpb_eta ) ;
-                     h_genparton_drb_vs_dra_sel3 -> Fill( gpa_dr, gpb_dr ) ;
+                     h_log10x2_vs_log10x1_sel3 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+                     h_genparton_etab_vs_etaa_sel3 -> Fill( gpa_eta, gpb_eta, weight ) ;
+                     h_genparton_drb_vs_dra_sel3 -> Fill( gpa_dr, gpb_dr, weight ) ;
 
 
 
@@ -773,100 +786,100 @@ void calo_analysis3::Loop( bool verbose ) {
             if ( j0_fid ) n_fid ++ ;
             if ( j1_fid ) n_fid ++ ;
 
-            h_n_fiducial -> Fill( n_fid ) ;
+            h_n_fiducial -> Fill( n_fid, weight ) ;
 
 
 
             float rec_dphi_0to2pi = rec_dphi ;
             if ( rec_dphi < 0 ) rec_dphi_0to2pi = rec_dphi_0to2pi + 2*3.14159265 ;
 
-            h_jj_dphi_rec_all -> Fill( rec_dphi_0to2pi ) ;
-            if ( n_fid == 2 ) h_jj_dphi_rec_fid -> Fill( rec_dphi_0to2pi ) ;
+            h_jj_dphi_rec_all -> Fill( rec_dphi_0to2pi, weight ) ;
+            if ( n_fid == 2 ) h_jj_dphi_rec_fid -> Fill( rec_dphi_0to2pi, weight ) ;
 
 
 
 
-            h_log10x2_vs_Pperp -> Fill( Pperp, log10(Event_X2[0]) ) ;
+            h_log10x2_vs_Pperp -> Fill( Pperp, log10(Event_X2[0]), weight ) ;
 
-            h_jet0_eta_vs_pt_all -> Fill( Jet05_PT[0], Jet05_Eta[0] ) ;
-            if ( gj0dr < 0.3 ) h_jet0_eta_vs_pt_gm -> Fill( Jet05_PT[0], Jet05_Eta[0] ) ;
-            if ( gp0dr < 1.0 ) h_jet0_eta_vs_pt_pm -> Fill( Jet05_PT[0], Jet05_Eta[0] ) ;
-            if ( gp0dr < 1.0 && gj0dr < 0.3 ) h_jet0_eta_vs_pt_gm_pm -> Fill( Jet05_PT[0], Jet05_Eta[0] ) ;
+            h_jet0_eta_vs_pt_all -> Fill( Jet05_PT[0], Jet05_Eta[0], weight ) ;
+            if ( gj0dr < 0.3 ) h_jet0_eta_vs_pt_gm -> Fill( Jet05_PT[0], Jet05_Eta[0], weight ) ;
+            if ( gp0dr < 1.0 ) h_jet0_eta_vs_pt_pm -> Fill( Jet05_PT[0], Jet05_Eta[0], weight ) ;
+            if ( gp0dr < 1.0 && gj0dr < 0.3 ) h_jet0_eta_vs_pt_gm_pm -> Fill( Jet05_PT[0], Jet05_Eta[0], weight ) ;
 
-            h_jet1_eta_vs_pt_all -> Fill( Jet05_PT[1], Jet05_Eta[1] ) ;
-            if ( gj1dr < 0.3 ) h_jet1_eta_vs_pt_gm -> Fill( Jet05_PT[1], Jet05_Eta[1] ) ;
-            if ( gp1dr < 1.0 ) h_jet1_eta_vs_pt_pm -> Fill( Jet05_PT[1], Jet05_Eta[1] ) ;
-            if ( gp1dr < 1.0 && gj1dr < 0.3 ) h_jet1_eta_vs_pt_gm_pm -> Fill( Jet05_PT[1], Jet05_Eta[1] ) ;
+            h_jet1_eta_vs_pt_all -> Fill( Jet05_PT[1], Jet05_Eta[1], weight ) ;
+            if ( gj1dr < 0.3 ) h_jet1_eta_vs_pt_gm -> Fill( Jet05_PT[1], Jet05_Eta[1], weight ) ;
+            if ( gp1dr < 1.0 ) h_jet1_eta_vs_pt_pm -> Fill( Jet05_PT[1], Jet05_Eta[1], weight ) ;
+            if ( gp1dr < 1.0 && gj1dr < 0.3 ) h_jet1_eta_vs_pt_gm_pm -> Fill( Jet05_PT[1], Jet05_Eta[1], weight ) ;
 
-            h_log10q2_vs_log10x2 -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
-            if ( has_2gjm ) h_log10q2_vs_log10x2_gm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
-            if ( has_2gjm && has_2gpm ) h_log10q2_vs_log10x2_gm_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
-            if ( has_2gpm ) h_log10q2_vs_log10x2_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ) ) ;
+            h_log10q2_vs_log10x2 -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ), weight ) ;
+            if ( has_2gjm ) h_log10q2_vs_log10x2_gm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ), weight ) ;
+            if ( has_2gjm && has_2gpm ) h_log10q2_vs_log10x2_gm_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ), weight ) ;
+            if ( has_2gpm ) h_log10q2_vs_log10x2_pm -> Fill( log10(Event_X2[0]), log10( Event_Scale[0]*Event_Scale[0] ), weight ) ;
 
-            h_log10x2_vs_log10x1 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-            if ( has_2gjm ) h_log10x2_vs_log10x1_gm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-            if ( has_2gjm && has_2gpm ) h_log10x2_vs_log10x1_gm_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-            if ( has_2gpm ) h_log10x2_vs_log10x1_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
+            h_log10x2_vs_log10x1 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+            if ( has_2gjm ) h_log10x2_vs_log10x1_gm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+            if ( has_2gjm && has_2gpm ) h_log10x2_vs_log10x1_gm_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+            if ( has_2gpm ) h_log10x2_vs_log10x1_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
 
-            h_j_phi_vs_eta_all -> Fill( Jet05_Eta[0], Jet05_Phi[0] ) ;
-            if ( j0_fid ) h_j_phi_vs_eta_fid -> Fill( Jet05_Eta[0], Jet05_Phi[0] ) ;
-            h_j_phi_vs_eta_all -> Fill( Jet05_Eta[1], Jet05_Phi[1] ) ;
-            if ( j1_fid ) h_j_phi_vs_eta_fid -> Fill( Jet05_Eta[1], Jet05_Phi[1] ) ;
+            h_j_phi_vs_eta_all -> Fill( Jet05_Eta[0], Jet05_Phi[0], weight ) ;
+            if ( j0_fid ) h_j_phi_vs_eta_fid -> Fill( Jet05_Eta[0], Jet05_Phi[0], weight ) ;
+            h_j_phi_vs_eta_all -> Fill( Jet05_Eta[1], Jet05_Phi[1], weight ) ;
+            if ( j1_fid ) h_j_phi_vs_eta_fid -> Fill( Jet05_Eta[1], Jet05_Phi[1], weight ) ;
 
-            h_q2_vs_jet0pt_all -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0] ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0pt_gm -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0] ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_q2_vs_jet0pt_pm -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0] ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 && gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0pt_gm_pm -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0] ) ;
+            h_q2_vs_jet0pt_all -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0], weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0pt_gm -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0], weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_q2_vs_jet0pt_pm -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0], weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 && gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0pt_gm_pm -> Fill( Jet05_PT[0], Event_Scale[0]*Event_Scale[0], weight ) ;
 
 
-            h_log10x2_vs_jet0pt_all -> Fill( Jet05_PT[0], log10(Event_X2[0]) ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_log10x2_vs_jet0pt_gm -> Fill( Jet05_PT[0], log10(Event_X2[0]) ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_jet0pt_pm -> Fill( Jet05_PT[0], log10(Event_X2[0]) ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 && gj0dr < 0.3 && gj1dr < 0.3 ) h_log10x2_vs_jet0pt_gm_pm -> Fill( Jet05_PT[0], log10(Event_X2[0]) ) ;
+            h_log10x2_vs_jet0pt_all -> Fill( Jet05_PT[0], log10(Event_X2[0]), weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_log10x2_vs_jet0pt_gm -> Fill( Jet05_PT[0], log10(Event_X2[0]), weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_jet0pt_pm -> Fill( Jet05_PT[0], log10(Event_X2[0]), weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 && gj0dr < 0.3 && gj1dr < 0.3 ) h_log10x2_vs_jet0pt_gm_pm -> Fill( Jet05_PT[0], log10(Event_X2[0]), weight ) ;
 
-            h_q2_vs_jet0eta_all -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0] ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0eta_gm -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0] ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_q2_vs_jet0eta_pm -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0] ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 && gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0eta_gm_pm -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0] ) ;
+            h_q2_vs_jet0eta_all -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0], weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0eta_gm -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0], weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_q2_vs_jet0eta_pm -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0], weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 && gj0dr < 0.3 && gj1dr < 0.3 ) h_q2_vs_jet0eta_gm_pm -> Fill( Jet05_Eta[0], Event_Scale[0]*Event_Scale[0], weight ) ;
 
-            h_j0pt_all -> Fill( Jet05_PT[0] ) ;
-            if ( gj0dr < 0.3 ) h_j0pt_gm -> Fill( Jet05_PT[0] ) ;
-            if ( gp0dr < 1.0 ) h_j0pt_pm -> Fill( Jet05_PT[0] ) ;
-            if ( gj0dr < 0.3 && gp0dr < 1.0 ) h_j0pt_gm_pm -> Fill( Jet05_PT[0] ) ;
+            h_j0pt_all -> Fill( Jet05_PT[0], weight ) ;
+            if ( gj0dr < 0.3 ) h_j0pt_gm -> Fill( Jet05_PT[0], weight ) ;
+            if ( gp0dr < 1.0 ) h_j0pt_pm -> Fill( Jet05_PT[0], weight ) ;
+            if ( gj0dr < 0.3 && gp0dr < 1.0 ) h_j0pt_gm_pm -> Fill( Jet05_PT[0], weight ) ;
 
-            h_j1pt_all -> Fill( Jet05_PT[1] ) ;
-            if ( gj1dr < 0.3 ) h_j1pt_gm -> Fill( Jet05_PT[1] ) ;
-            if ( gp1dr < 1.0 ) h_j1pt_pm -> Fill( Jet05_PT[1] ) ;
-            if ( gj1dr < 0.3 && gp1dr < 1.0 ) h_j1pt_gm_pm -> Fill( Jet05_PT[1] ) ;
-            if ( gp1dr < 1.0 && gp0dr < 1.0 ) h_j1pt_bothpm -> Fill( Jet05_PT[1] ) ;
+            h_j1pt_all -> Fill( Jet05_PT[1], weight ) ;
+            if ( gj1dr < 0.3 ) h_j1pt_gm -> Fill( Jet05_PT[1], weight ) ;
+            if ( gp1dr < 1.0 ) h_j1pt_pm -> Fill( Jet05_PT[1], weight ) ;
+            if ( gj1dr < 0.3 && gp1dr < 1.0 ) h_j1pt_gm_pm -> Fill( Jet05_PT[1], weight ) ;
+            if ( gp1dr < 1.0 && gp0dr < 1.0 ) h_j1pt_bothpm -> Fill( Jet05_PT[1], weight ) ;
 
             float jet_ave_pt = 0.5 * ( Jet05_PT[0] + Jet05_PT[1] ) ;
-            h_javept_all -> Fill( jet_ave_pt ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_javept_gm -> Fill( jet_ave_pt ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0) h_javept_pm -> Fill( jet_ave_pt ) ;
-            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_javept_gm_pm -> Fill( jet_ave_pt ) ;
+            h_javept_all -> Fill( jet_ave_pt, weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_javept_gm -> Fill( jet_ave_pt, weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0) h_javept_pm -> Fill( jet_ave_pt, weight ) ;
+            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_javept_gm_pm -> Fill( jet_ave_pt, weight ) ;
 
 
-            h_j1pt_vs_j0pt_all -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_j1pt_vs_j0pt_gm -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_j1pt_vs_j0pt_pm -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
-            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_j1pt_vs_j0pt_gm_pm -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
+            h_j1pt_vs_j0pt_all -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_j1pt_vs_j0pt_gm -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_j1pt_vs_j0pt_pm -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_j1pt_vs_j0pt_gm_pm -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
 
 
 
 
             int process_code = get_process( Particle_PID[2], Particle_PID[3], Particle_PID[4], Particle_PID[5] ) ;
 
-            h_process_all -> Fill( process_code ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_process_gm -> Fill( process_code ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_process_pm -> Fill( process_code ) ;
-            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_process_gm_pm -> Fill( process_code ) ;
+            h_process_all -> Fill( process_code, weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_process_gm -> Fill( process_code, weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_process_pm -> Fill( process_code, weight ) ;
+            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_process_gm_pm -> Fill( process_code, weight ) ;
 
 
-            h_pthat_all -> Fill( Particle_PT[4] ) ;
-            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_pthat_gm -> Fill( Particle_PT[4] ) ;
-            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_pthat_pm -> Fill( Particle_PT[4] ) ;
-            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_pthat_gm_pm -> Fill( Particle_PT[4] ) ;
+            h_pthat_all -> Fill( Particle_PT[4], weight ) ;
+            if ( gj0dr < 0.3 && gj1dr < 0.3 ) h_pthat_gm -> Fill( Particle_PT[4], weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_pthat_pm -> Fill( Particle_PT[4], weight ) ;
+            if ( gj0dr < 0.3 && gp0dr < 1.0 && gj1dr < 0.3 && gp1dr < 1.0 ) h_pthat_gm_pm -> Fill( Particle_PT[4], weight ) ;
 
 
 
@@ -874,29 +887,29 @@ void calo_analysis3::Loop( bool verbose ) {
 
             if ( qperp / Pperp < 1000000000000000 ) {
 
-               h_r2j_rec_dphi_all -> Fill( rec_dphi ) ;
-               h_r2j_gm0dr -> Fill( gj0dr ) ;
-               h_r2j_gm1dr -> Fill( gj1dr ) ;
+               h_r2j_rec_dphi_all -> Fill( rec_dphi, weight ) ;
+               h_r2j_gm0dr -> Fill( gj0dr, weight ) ;
+               h_r2j_gm1dr -> Fill( gj1dr, weight ) ;
 
                if ( has_2gjm ) {
 
 
-                  h_r2j_rec_dphi_2gjm -> Fill( rec_dphi ) ;
+                  h_r2j_rec_dphi_2gjm -> Fill( rec_dphi, weight ) ;
                   float phi0_recmgen = calc_dphi( Jet05_Phi[0], GenJet05_Phi[ind_gj0] ) ;
                   float phi1_recmgen = calc_dphi( Jet05_Phi[1], GenJet05_Phi[ind_gj1] ) ;
-                  h_r2j_phi0_recmgen -> Fill( phi0_recmgen ) ;
-                  h_r2j_phi1_recmgen -> Fill( phi1_recmgen ) ;
+                  h_r2j_phi0_recmgen -> Fill( phi0_recmgen, weight ) ;
+                  h_r2j_phi1_recmgen -> Fill( phi1_recmgen, weight ) ;
                   float eta0_recmgen = Jet05_Eta[0] - GenJet05_Eta[ind_gj0] ;
                   float eta1_recmgen = Jet05_Eta[1] - GenJet05_Eta[ind_gj1] ;
-                  h_r2j_eta0_recmgen -> Fill( eta0_recmgen ) ;
-                  h_r2j_eta1_recmgen -> Fill( eta1_recmgen ) ;
+                  h_r2j_eta0_recmgen -> Fill( eta0_recmgen, weight ) ;
+                  h_r2j_eta1_recmgen -> Fill( eta1_recmgen, weight ) ;
 
                   float gen_dphi = calc_dphi( GenJet05_Phi[ind_gj0], GenJet05_Phi[ind_gj1] ) ;
 
-                  h_r2j_dphijj_recmgen_vs_Pperp -> Fill( Pperp, rec_dphi - gen_dphi ) ;
+                  h_r2j_dphijj_recmgen_vs_Pperp -> Fill( Pperp, rec_dphi - gen_dphi, weight ) ;
 
 
-                  h_r2j_dphijj_recmgen -> Fill( rec_dphi - gen_dphi ) ;
+                  h_r2j_dphijj_recmgen -> Fill( rec_dphi - gen_dphi, weight ) ;
 
                   float genjet0px = GenJet05_PT[ind_gj0]*cos(GenJet05_Phi[ind_gj0]) ;
                   float genjet0py = GenJet05_PT[ind_gj0]*sin(GenJet05_Phi[ind_gj0]) ;
@@ -926,113 +939,113 @@ void calo_analysis3::Loop( bool verbose ) {
 
 
 
-                  h_j0_pzrec_vs_pzgen -> Fill( jet0pz, genjet0pz ) ;
-                  if ( Jet05_Eta[0] > 3.0 ) h_j0_etagt3_pzrec_vs_pzgen -> Fill( jet0pz, genjet0pz ) ;
+                  h_j0_pzrec_vs_pzgen -> Fill( jet0pz, genjet0pz, weight ) ;
+                  if ( Jet05_Eta[0] > 3.0 ) h_j0_etagt3_pzrec_vs_pzgen -> Fill( jet0pz, genjet0pz, weight ) ;
 
-                  h_r2j_Pperp -> Fill( Pperp ) ;
-                  h_r2j_qperp -> Fill( qperp ) ;
+                  h_r2j_Pperp -> Fill( Pperp, weight ) ;
+                  h_r2j_qperp -> Fill( qperp, weight ) ;
 
-                  h_r2j_qperp_vs_Pperp -> Fill( Pperp, qperp ) ;
+                  h_r2j_qperp_vs_Pperp -> Fill( Pperp, qperp, weight ) ;
 
-                  h_r2j_Pperp_recmgen -> Fill( Pperp - genPperp ) ;
-                  h_r2j_qperp_recmgen -> Fill( qperp - genqperp ) ;
+                  h_r2j_Pperp_recmgen -> Fill( Pperp - genPperp, weight ) ;
+                  h_r2j_qperp_recmgen -> Fill( qperp - genqperp, weight ) ;
 
-                  h_r2j_Pperp_gen_vs_rec -> Fill( Pperp, genPperp ) ;
-                  h_r2j_qperp_gen_vs_rec -> Fill( qperp, genqperp ) ;
+                  h_r2j_Pperp_gen_vs_rec -> Fill( Pperp, genPperp, weight ) ;
+                  h_r2j_qperp_gen_vs_rec -> Fill( qperp, genqperp, weight ) ;
 
 
-                  h_r2j_qperp_over_Pperp -> Fill( qperp / Pperp ) ;
+                  h_r2j_qperp_over_Pperp -> Fill( qperp / Pperp, weight ) ;
 
 
                   float gen_dphi_0to2pi = gen_dphi ;
                   if ( gen_dphi < 0 ) gen_dphi_0to2pi = gen_dphi_0to2pi + 2*3.14159265 ;
 
-                  h_jj_dphi_rec_bothjgm_all -> Fill( rec_dphi_0to2pi ) ;
-                  if ( n_fid == 2 ) h_jj_dphi_rec_bothjgm_fid -> Fill( rec_dphi_0to2pi ) ;
+                  h_jj_dphi_rec_bothjgm_all -> Fill( rec_dphi_0to2pi, weight ) ;
+                  if ( n_fid == 2 ) h_jj_dphi_rec_bothjgm_fid -> Fill( rec_dphi_0to2pi, weight ) ;
 
-                  h_jj_dphi_gen_all -> Fill( gen_dphi_0to2pi ) ;
-                  if ( n_fid == 2 ) h_jj_dphi_gen_fid -> Fill( gen_dphi_0to2pi ) ;
-
-
+                  h_jj_dphi_gen_all -> Fill( gen_dphi_0to2pi, weight ) ;
+                  if ( n_fid == 2 ) h_jj_dphi_gen_fid -> Fill( gen_dphi_0to2pi, weight ) ;
 
 
 
-                  h_r2j_j1_vs_j0_pt -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
-                  h_r2j_j1_vs_j0_eta -> Fill( Jet05_Eta[0], Jet05_Eta[1] ) ;
-                  h_r2j_j1_vs_j0_pz -> Fill( jet0pz, jet1pz ) ;
-                  h_r2j_j1_vs_j0_phi -> Fill( Jet05_Phi[0], Jet05_Phi[1] ) ;
 
-                  h_r2j_dphi_Pperp_qperp -> Fill( dphi_Pperp_qperp ) ;
-                  h_r2j_dphi_Pperp_qperp_gen -> Fill( dphi_genPperp_genqperp ) ;
-                  h_r2j_dphi_Pperp_qperp_recmgen -> Fill( dphi_Pperp_qperp_recmgen ) ;
 
-                  h_r2j_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
+                  h_r2j_j1_vs_j0_pt -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+                  h_r2j_j1_vs_j0_eta -> Fill( Jet05_Eta[0], Jet05_Eta[1], weight ) ;
+                  h_r2j_j1_vs_j0_pz -> Fill( jet0pz, jet1pz, weight ) ;
+                  h_r2j_j1_vs_j0_phi -> Fill( Jet05_Phi[0], Jet05_Phi[1], weight ) ;
 
-                  if ( fabs(rec_dphi)>3.14159265/2. ) h_r2j_dphicut_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
+                  h_r2j_dphi_Pperp_qperp -> Fill( dphi_Pperp_qperp, weight ) ;
+                  h_r2j_dphi_Pperp_qperp_gen -> Fill( dphi_genPperp_genqperp, weight ) ;
+                  h_r2j_dphi_Pperp_qperp_recmgen -> Fill( dphi_Pperp_qperp_recmgen, weight ) ;
 
-                  if ( gen_partons_match ) h_r2j_gpm_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
+                  h_r2j_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
+
+                  if ( fabs(rec_dphi)>3.14159265/2. ) h_r2j_dphicut_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
+
+                  if ( gen_partons_match ) h_r2j_gpm_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
 
 
                   float jet0_ptrec_over_ptgen = ( Jet05_PT[0] )/( GenJet05_PT[ind_gj0] ) ;
                   float jet1_ptrec_over_ptgen = ( Jet05_PT[1] )/( GenJet05_PT[ind_gj1] ) ;
 
 
-                  h_r2j_ptrec_over_ptgen_vs_eta -> Fill( Jet05_Eta[0], jet0_ptrec_over_ptgen ) ;
-                  h_r2j_ptrec_over_ptgen_vs_eta -> Fill( Jet05_Eta[1], jet1_ptrec_over_ptgen ) ;
+                  h_r2j_ptrec_over_ptgen_vs_eta -> Fill( Jet05_Eta[0], jet0_ptrec_over_ptgen, weight ) ;
+                  h_r2j_ptrec_over_ptgen_vs_eta -> Fill( Jet05_Eta[1], jet1_ptrec_over_ptgen, weight ) ;
 
 
-                  h_r2j_genjetht_eta1 -> Fill ( genjetht_eta1 ) ;
+                  h_r2j_genjetht_eta1 -> Fill ( genjetht_eta1, weight ) ;
 
-                  h_r2j_qperpxory_recmgen -> Fill( qperpx - genqperpx ) ;
-                  h_r2j_qperpxory_recmgen -> Fill( qperpy - genqperpy ) ;
+                  h_r2j_qperpxory_recmgen -> Fill( qperpx - genqperpx, weight ) ;
+                  h_r2j_qperpxory_recmgen -> Fill( qperpy - genqperpy, weight ) ;
 
-                  h_log10x2_vs_log10x1_sel -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
+                  h_log10x2_vs_log10x1_sel -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
 
-                  h_parton0_dr -> Fill( gp0dr ) ;
-                  h_parton1_dr -> Fill( gp1dr ) ;
+                  h_parton0_dr -> Fill( gp0dr, weight ) ;
+                  h_parton1_dr -> Fill( gp1dr, weight ) ;
 
-                  h_parton_pt_sel -> Fill( Particle_PT[4] ) ;
+                  h_parton_pt_sel -> Fill( Particle_PT[4], weight ) ;
 
-                  if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) h_parton_pt_jpt30_sel -> Fill( Particle_PT[4] ) ;
-                  if ( Jet05_PT[0] > 3.5 && Jet05_PT[1] > 3.5 ) h_parton_pt_jpt35_sel -> Fill( Particle_PT[4] ) ;
-                  if ( Jet05_PT[0] > 4.0 && Jet05_PT[1] > 4.0 ) h_parton_pt_jpt40_sel -> Fill( Particle_PT[4] ) ;
-                  if ( Jet05_PT[0] > 4.5 && Jet05_PT[1] > 4.5 ) h_parton_pt_jpt45_sel -> Fill( Particle_PT[4] ) ;
-                  if ( Jet05_PT[0] > 5.0 && Jet05_PT[1] > 5.0 ) h_parton_pt_jpt50_sel -> Fill( Particle_PT[4] ) ;
+                  if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) h_parton_pt_jpt30_sel -> Fill( Particle_PT[4], weight ) ;
+                  if ( Jet05_PT[0] > 3.5 && Jet05_PT[1] > 3.5 ) h_parton_pt_jpt35_sel -> Fill( Particle_PT[4], weight ) ;
+                  if ( Jet05_PT[0] > 4.0 && Jet05_PT[1] > 4.0 ) h_parton_pt_jpt40_sel -> Fill( Particle_PT[4], weight ) ;
+                  if ( Jet05_PT[0] > 4.5 && Jet05_PT[1] > 4.5 ) h_parton_pt_jpt45_sel -> Fill( Particle_PT[4], weight ) ;
+                  if ( Jet05_PT[0] > 5.0 && Jet05_PT[1] > 5.0 ) h_parton_pt_jpt50_sel -> Fill( Particle_PT[4], weight ) ;
 
                   if ( GenJet05_ == 2 ) {
-                     h_r2j_2gj_dphi_Pperp_qperp -> Fill( dphi_Pperp_qperp ) ;
-                     h_r2j_2gj_dphi_Pperp_qperp_gen -> Fill( dphi_genPperp_genqperp ) ;
-                     h_r2j_2gj_dphi_Pperp_qperp_recmgen -> Fill( dphi_Pperp_qperp_recmgen ) ;
-                     h_r2j_2gj_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
-                     h_r2j_2gj_qperp_over_Pperp -> Fill( qperp / Pperp ) ;
-                     h_r2j_2gj_qperp_vs_Pperp -> Fill( Pperp, qperp ) ;
-                     h_r2j_2gj_j1_vs_j0_pt -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
-                     h_r2j_2gj_genjetht_eta1 -> Fill ( genjetht_eta1 ) ;
-                     h_r2j_2gj_j1_vs_j0_phi -> Fill( Jet05_Phi[0], Jet05_Phi[1] ) ;
-                     if ( fabs(rec_dphi)>3.14159265/2. ) h_r2j_2gj_dphicut_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
-                     h_r2j_2gj_qperpxory_recmgen -> Fill( qperpx - genqperpx ) ;
-                     h_r2j_2gj_qperpxory_recmgen -> Fill( qperpy - genqperpy ) ;
-                     h_r2j_2gj_dphijj_recmgen_vs_Pperp -> Fill( Pperp, rec_dphi - gen_dphi ) ;
-                     h_2gj_parton0_dr -> Fill( gp0dr ) ;
-                     h_2gj_parton1_dr -> Fill( gp1dr ) ;
+                     h_r2j_2gj_dphi_Pperp_qperp -> Fill( dphi_Pperp_qperp, weight ) ;
+                     h_r2j_2gj_dphi_Pperp_qperp_gen -> Fill( dphi_genPperp_genqperp, weight ) ;
+                     h_r2j_2gj_dphi_Pperp_qperp_recmgen -> Fill( dphi_Pperp_qperp_recmgen, weight ) ;
+                     h_r2j_2gj_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
+                     h_r2j_2gj_qperp_over_Pperp -> Fill( qperp / Pperp, weight ) ;
+                     h_r2j_2gj_qperp_vs_Pperp -> Fill( Pperp, qperp, weight ) ;
+                     h_r2j_2gj_j1_vs_j0_pt -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+                     h_r2j_2gj_genjetht_eta1 -> Fill ( genjetht_eta1, weight ) ;
+                     h_r2j_2gj_j1_vs_j0_phi -> Fill( Jet05_Phi[0], Jet05_Phi[1], weight ) ;
+                     if ( fabs(rec_dphi)>3.14159265/2. ) h_r2j_2gj_dphicut_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
+                     h_r2j_2gj_qperpxory_recmgen -> Fill( qperpx - genqperpx, weight ) ;
+                     h_r2j_2gj_qperpxory_recmgen -> Fill( qperpy - genqperpy, weight ) ;
+                     h_r2j_2gj_dphijj_recmgen_vs_Pperp -> Fill( Pperp, rec_dphi - gen_dphi, weight ) ;
+                     h_2gj_parton0_dr -> Fill( gp0dr, weight ) ;
+                     h_2gj_parton1_dr -> Fill( gp1dr, weight ) ;
 
                   }
                   if ( GenJet05_ == 3 ) {
-                     h_r2j_3gj_dphi_Pperp_qperp -> Fill( dphi_Pperp_qperp ) ;
-                     h_r2j_3gj_dphi_Pperp_qperp_gen -> Fill( dphi_genPperp_genqperp ) ;
-                     h_r2j_3gj_dphi_Pperp_qperp_recmgen -> Fill( dphi_Pperp_qperp_recmgen ) ;
-                     h_r2j_3gj_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
-                     h_r2j_3gj_qperp_over_Pperp -> Fill( qperp / Pperp ) ;
-                     h_r2j_3gj_qperp_vs_Pperp -> Fill( Pperp, qperp ) ;
-                     h_r2j_3gj_j1_vs_j0_pt -> Fill( Jet05_PT[0], Jet05_PT[1] ) ;
-                     h_r2j_3gj_genjetht_eta1 -> Fill ( genjetht_eta1 ) ;
-                     h_r2j_3gj_j1_vs_j0_phi -> Fill( Jet05_Phi[0], Jet05_Phi[1] ) ;
-                     if ( fabs(rec_dphi)>3.14159265/2. ) h_r2j_3gj_dphicut_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp ) ;
-                     h_r2j_3gj_qperpxory_recmgen -> Fill( qperpx - genqperpx ) ;
-                     h_r2j_3gj_qperpxory_recmgen -> Fill( qperpy - genqperpy ) ;
-                     h_r2j_3gj_dphijj_recmgen_vs_Pperp -> Fill( Pperp, rec_dphi - gen_dphi ) ;
-                     h_3gj_parton0_dr -> Fill( gp0dr ) ;
-                     h_3gj_parton1_dr -> Fill( gp1dr ) ;
+                     h_r2j_3gj_dphi_Pperp_qperp -> Fill( dphi_Pperp_qperp, weight ) ;
+                     h_r2j_3gj_dphi_Pperp_qperp_gen -> Fill( dphi_genPperp_genqperp, weight ) ;
+                     h_r2j_3gj_dphi_Pperp_qperp_recmgen -> Fill( dphi_Pperp_qperp_recmgen, weight ) ;
+                     h_r2j_3gj_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
+                     h_r2j_3gj_qperp_over_Pperp -> Fill( qperp / Pperp, weight ) ;
+                     h_r2j_3gj_qperp_vs_Pperp -> Fill( Pperp, qperp, weight ) ;
+                     h_r2j_3gj_j1_vs_j0_pt -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+                     h_r2j_3gj_genjetht_eta1 -> Fill ( genjetht_eta1, weight ) ;
+                     h_r2j_3gj_j1_vs_j0_phi -> Fill( Jet05_Phi[0], Jet05_Phi[1], weight ) ;
+                     if ( fabs(rec_dphi)>3.14159265/2. ) h_r2j_3gj_dphicut_dphi_Pq_vs_dphi_jj -> Fill( rec_dphi, dphi_Pperp_qperp, weight ) ;
+                     h_r2j_3gj_qperpxory_recmgen -> Fill( qperpx - genqperpx, weight ) ;
+                     h_r2j_3gj_qperpxory_recmgen -> Fill( qperpy - genqperpy, weight ) ;
+                     h_r2j_3gj_dphijj_recmgen_vs_Pperp -> Fill( Pperp, rec_dphi - gen_dphi, weight ) ;
+                     h_3gj_parton0_dr -> Fill( gp0dr, weight ) ;
+                     h_3gj_parton1_dr -> Fill( gp1dr, weight ) ;
                   }
 
 
@@ -1105,33 +1118,33 @@ void calo_analysis3::Loop( bool verbose ) {
       int gen_pid1 = Particle_PID[4] ;
       int gen_pid2 = Particle_PID[5] ;
 
-      h_gen_parton_eta2_vs_eta1_all -> Fill( Particle_Eta[4], Particle_Eta[5] ) ;
-      if ( n_genjet_central==2 ) h_gen_parton_eta2_vs_eta1_2gen_central -> Fill( Particle_Eta[4], Particle_Eta[5] ) ;
-      if ( n_genjet_forward==2 ) h_gen_parton_eta2_vs_eta1_2gen_forward -> Fill( Particle_Eta[4], Particle_Eta[5] ) ;
+      h_gen_parton_eta2_vs_eta1_all -> Fill( Particle_Eta[4], Particle_Eta[5], weight ) ;
+      if ( n_genjet_central==2 ) h_gen_parton_eta2_vs_eta1_2gen_central -> Fill( Particle_Eta[4], Particle_Eta[5], weight ) ;
+      if ( n_genjet_forward==2 ) h_gen_parton_eta2_vs_eta1_2gen_forward -> Fill( Particle_Eta[4], Particle_Eta[5], weight ) ;
 
 
-      h_njets -> Fill( GenJet05_ ) ;
+      h_njets -> Fill( GenJet05_, weight ) ;
 
-      h_log10x2_vs_log10x1_all -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
+      h_log10x2_vs_log10x1_all -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
 
-      h_parton_pt_all -> Fill( Particle_PT[4] ) ;
+      h_parton_pt_all -> Fill( Particle_PT[4], weight ) ;
 
-      if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) h_parton_pt_jpt30_all -> Fill( Particle_PT[4] ) ;
-      if ( Jet05_PT[0] > 3.5 && Jet05_PT[1] > 3.5 ) h_parton_pt_jpt35_all -> Fill( Particle_PT[4] ) ;
-      if ( Jet05_PT[0] > 4.0 && Jet05_PT[1] > 4.0 ) h_parton_pt_jpt40_all -> Fill( Particle_PT[4] ) ;
-      if ( Jet05_PT[0] > 4.5 && Jet05_PT[1] > 4.5 ) h_parton_pt_jpt45_all -> Fill( Particle_PT[4] ) ;
-      if ( Jet05_PT[0] > 5.0 && Jet05_PT[1] > 5.0 ) h_parton_pt_jpt50_all -> Fill( Particle_PT[4] ) ;
+      if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) h_parton_pt_jpt30_all -> Fill( Particle_PT[4], weight ) ;
+      if ( Jet05_PT[0] > 3.5 && Jet05_PT[1] > 3.5 ) h_parton_pt_jpt35_all -> Fill( Particle_PT[4], weight ) ;
+      if ( Jet05_PT[0] > 4.0 && Jet05_PT[1] > 4.0 ) h_parton_pt_jpt40_all -> Fill( Particle_PT[4], weight ) ;
+      if ( Jet05_PT[0] > 4.5 && Jet05_PT[1] > 4.5 ) h_parton_pt_jpt45_all -> Fill( Particle_PT[4], weight ) ;
+      if ( Jet05_PT[0] > 5.0 && Jet05_PT[1] > 5.0 ) h_parton_pt_jpt50_all -> Fill( Particle_PT[4], weight ) ;
 
-      if ( n_genjet_central==2 ) h_log10x2_vs_log10x1_2gen_central -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-      if ( n_genjet_forward==2 ) h_log10x2_vs_log10x1_2gen_forward -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-      if ( n_genjet_forward==1 && n_genjet_central==1 ) h_log10x2_vs_log10x1_1gen_central_1gen_forward -> Fill( log10(Event_X1[0]), log10(Event_X2[0]) ) ;
-      h_ngenjet_forward_vs_central -> Fill( n_genjet_central, n_genjet_forward ) ;
+      if ( n_genjet_central==2 ) h_log10x2_vs_log10x1_2gen_central -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+      if ( n_genjet_forward==2 ) h_log10x2_vs_log10x1_2gen_forward -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+      if ( n_genjet_forward==1 && n_genjet_central==1 ) h_log10x2_vs_log10x1_1gen_central_1gen_forward -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+      h_ngenjet_forward_vs_central -> Fill( n_genjet_central, n_genjet_forward, weight ) ;
 
 
-      h_id2_vs_id1_all -> Fill( gen_pid1, gen_pid2 ) ;
-      if ( n_genjet_central==2 ) h_id2_vs_id1_2gen_central -> Fill( gen_pid1, gen_pid2 ) ;
-      if ( n_genjet_forward==2 ) h_id2_vs_id1_2gen_forward -> Fill( gen_pid1, gen_pid2 ) ;
-      if ( n_genjet_forward==1 && n_genjet_central==1 ) h_id2_vs_id1_1gen_central_1gen_forward -> Fill( gen_pid1, gen_pid2 ) ;
+      h_id2_vs_id1_all -> Fill( gen_pid1, gen_pid2, weight ) ;
+      if ( n_genjet_central==2 ) h_id2_vs_id1_2gen_central -> Fill( gen_pid1, gen_pid2, weight ) ;
+      if ( n_genjet_forward==2 ) h_id2_vs_id1_2gen_forward -> Fill( gen_pid1, gen_pid2, weight ) ;
+      if ( n_genjet_forward==1 && n_genjet_central==1 ) h_id2_vs_id1_1gen_central_1gen_forward -> Fill( gen_pid1, gen_pid2, weight ) ;
 
       if ( n_genjet_forward==2 ) {
 
@@ -1196,25 +1209,25 @@ void calo_analysis3::Loop( bool verbose ) {
       if ( dphi > 3.14159265 ) dphi = dphi - 2*3.14159265 ;
       if ( dphi <-3.14159265 ) dphi = dphi + 2*3.14159265 ;
 
-      h_dphi -> Fill( dphi ) ;
+      h_dphi -> Fill( dphi, weight ) ;
 
       float deta = GenJet05_Eta[1] - GenJet05_Eta[0] ;
-      h_deta -> Fill( deta ) ;
+      h_deta -> Fill( deta, weight ) ;
 
-      h_eta2vseta1 -> Fill( GenJet05_Eta[0], GenJet05_Eta[1] ) ;
-      h_pt2vspt1 -> Fill( GenJet05_PT[0], GenJet05_PT[1] ) ;
+      h_eta2vseta1 -> Fill( GenJet05_Eta[0], GenJet05_Eta[1], weight ) ;
+      h_pt2vspt1 -> Fill( GenJet05_PT[0], GenJet05_PT[1], weight ) ;
 
-      h_deta_vs_dphi -> Fill( dphi, deta ) ;
+      h_deta_vs_dphi -> Fill( dphi, deta, weight ) ;
 
 
-      if ( GenJet05_Eta[0] > 2 && GenJet05_Eta[0] < 4 && GenJet05_Eta[1] > 2 && GenJet05_Eta[1] < 4 ) h_dphi_both_eta_2to4 -> Fill(dphi) ;
+      if ( GenJet05_Eta[0] > 2 && GenJet05_Eta[0] < 4 && GenJet05_Eta[1] > 2 && GenJet05_Eta[1] < 4 ) h_dphi_both_eta_2to4 -> Fill(dphi, weight) ;
 
 
 
       if ( GenJet05_PT[0]<8 ) continue ;
 
-      h_dphi_pt1gt8 -> Fill( dphi ) ;
-      h_deta_pt1gt8 -> Fill( deta ) ;
+      h_dphi_pt1gt8 -> Fill( dphi, weight ) ;
+      h_deta_pt1gt8 -> Fill( deta, weight ) ;
 
 
 
@@ -1225,8 +1238,8 @@ void calo_analysis3::Loop( bool verbose ) {
 
       if ( GenJet05_PT[1]<8 ) continue ;
 
-      h_dphi_pt12gt8 -> Fill( dphi ) ;
-      h_deta_pt12gt8 -> Fill( deta ) ;
+      h_dphi_pt12gt8 -> Fill( dphi, weight ) ;
+      h_deta_pt12gt8 -> Fill( deta, weight ) ;
 
 
 
@@ -1234,11 +1247,13 @@ void calo_analysis3::Loop( bool verbose ) {
    } // jentry
    printf("\n\n Done.\n\n") ;
 
-   saveHist( "ca3.root", "h*" ) ;
+   gSystem -> Exec("mkdir -p ca4-output") ;
 
-   gDirectory -> Delete( "h*" ) ;
+   char outfilename[1000] ;
+   sprintf( outfilename, "ca4-output/dset-%s.root", dset_name ) ;
 
-   loadHist( "ca3.root" ) ;
+   saveHist( outfilename, "h*" ) ;
+
 
 }
 
