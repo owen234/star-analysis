@@ -52,7 +52,7 @@ void saveHist(const char* filename, const char* pat, bool delete_hists = false )
 
 
 //void loadHist(const char* filename, const char* pfx, const char* pat, Bool_t doAdd, Double_t scaleFactor)
-void loadHist(const char* filename="in.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0)
+void loadHist(const char* filename="ca4-output/all.root", const char* pfx=0, const char* pat="*", Bool_t doAdd=kFALSE, Double_t scaleFactor=-1.0)
 {
   ///////////cout << " Reading histograms from file: " << filename << endl ;
   TFile inf(filename) ;

@@ -2,7 +2,7 @@
 #include "histio.c"
 #include "utils.c"
 
-   void pf_x1x2( const char* infile = "ca3-2022-10-27d.root" ) {
+   void pf_x1x2( const char* infile = "ca4-output/all.root" ) {
 
       gStyle -> SetPadBottomMargin(0.15) ;
       gStyle -> SetPadTopMargin(0.10) ;

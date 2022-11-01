@@ -1,4 +1,5 @@
-
+#ifndef utils_c
+#define utils_c
 
 
 
@@ -171,4 +172,4 @@ TH2F* convert_log10_to_linear_2d( TH2* hp_in ) {
 
 
 
-
+#endif

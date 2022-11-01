@@ -730,7 +730,7 @@ calo_analysis4::calo_analysis4( const char* arg_dset_name ) : fChain(0)
       printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
 
       dset_ngen0_mc = 3.14e9 ;
-      dset_total_pp_xsec_mb = 19.65 ;
+      dset_total_pp_xsec_mb = 19.73 ;
       dset_pthatmin = 1.8 ;
       dset_pthatmax = 3.0 ;
 
@@ -745,11 +745,12 @@ calo_analysis4::calo_analysis4( const char* arg_dset_name ) : fChain(0)
       int nfiles(0) ;
 
       nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat3.0to5.0-rjpt3-gjpt2-30x10M-2022-10-30a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat3.0to5.0-rjpt3-gjpt2-30x10M-2022-10-30b/*.root") ;
 
       printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
 
-      dset_ngen0_mc = 0.29e9 ;
-      dset_total_pp_xsec_mb = 2.19 ;
+      dset_ngen0_mc = 0.58e9 ;
+      dset_total_pp_xsec_mb = 2.191 ;
       dset_pthatmin = 3.0 ;
       dset_pthatmax = 5.0 ;
 
@@ -764,10 +765,13 @@ calo_analysis4::calo_analysis4( const char* arg_dset_name ) : fChain(0)
       int nfiles(0) ;
 
       nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-30x40M-2022-10-16a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-rjpt3-gjpt2-30x10M-2022-10-30a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-rjpt3-gjpt2-30x20M-2022-10-31a/*.root") ;
+
 
       printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
 
-      dset_ngen0_mc = 0.52e9 ;
+      dset_ngen0_mc = 1.140e9 ;
       dset_total_pp_xsec_mb = 0.218 ;
       dset_pthatmin = 5.0 ;
       dset_pthatmax = 999.0 ;
