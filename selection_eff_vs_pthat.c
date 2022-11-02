@@ -6,7 +6,7 @@
       TChain* ch_nofilter = new TChain("Delphes") ;
       TChain* ch_filter = new TChain("Delphes") ;
 
-      ch_nofilter -> Add( "test-1M-2022-10-23a/chunk-00.root") ;
+      ch_nofilter -> Add( "/home/owen/delphes/temp-second-version/delphes/test-1M-2022-10-23a/chunk-00.root") ;
       int n_nofilter = ch_nofilter -> GetEntries() ;
       printf("\n\n Number of events in no-filter chain:  %d\n\n", n_nofilter ) ;
 

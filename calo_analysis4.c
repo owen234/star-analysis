@@ -480,12 +480,14 @@ void calo_analysis4::Loop( bool verbose ) {
    TH2F* h_jet1pt_vs_jet0pt_sel1 = new TH2F( "h_jet1pt_vs_jet0pt_sel1", "jet1pt vs jet0pt, sel1", 40, 0., 8., 40, 0., 8. ) ;
    TH2F* h_jet1pt_vs_jet0pt_sel2 = new TH2F( "h_jet1pt_vs_jet0pt_sel2", "jet1pt vs jet0pt, sel2", 40, 0., 8., 40, 0., 8. ) ;
    TH2F* h_jet1pt_vs_jet0pt_sel3 = new TH2F( "h_jet1pt_vs_jet0pt_sel3", "jet1pt vs jet0pt, sel3", 40, 0., 8., 40, 0., 8. ) ;
+   TH2F* h_jet1pt_vs_jet0pt_sel3_pm = new TH2F( "h_jet1pt_vs_jet0pt_sel3_pm", "jet1pt vs jet0pt, sel3, parton matched", 40, 0., 8., 40, 0., 8. ) ;
 
 
    TH2F* h_jet1eta_vs_jet0eta_sel0 = new TH2F( "h_jet1eta_vs_jet0eta_sel0", "jet1eta vs jet0eta, sel0",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
    TH2F* h_jet1eta_vs_jet0eta_sel1 = new TH2F( "h_jet1eta_vs_jet0eta_sel1", "jet1eta vs jet0eta, sel1",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
    TH2F* h_jet1eta_vs_jet0eta_sel2 = new TH2F( "h_jet1eta_vs_jet0eta_sel2", "jet1eta vs jet0eta, sel2",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
    TH2F* h_jet1eta_vs_jet0eta_sel3 = new TH2F( "h_jet1eta_vs_jet0eta_sel3", "jet1eta vs jet0eta, sel3",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
+   TH2F* h_jet1eta_vs_jet0eta_sel3_pm = new TH2F( "h_jet1eta_vs_jet0eta_sel3_pm", "jet1eta vs jet0eta, sel3, parton matched",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
 
    TH1F* h_r2j_genjetht_sel0 = new TH1F( "h_r2j_genjetht_sel0", "gen jet HT for -1<eta<2, sel0", 60, 0., 20. ) ;
    TH1F* h_r2j_genjetht_sel1 = new TH1F( "h_r2j_genjetht_sel1", "gen jet HT for -1<eta<2, sel1", 60, 0., 20. ) ;
@@ -505,6 +507,18 @@ void calo_analysis4::Loop( bool verbose ) {
    TH2F* h_r2j_genjetht_vs_log10x2_sel0 = new TH2F( "h_r2j_genjetht_vs_log10x2_sel0", "gen jet HT for -1<eta<2 vs x2, sel0", 60, -4., 1., 60, 0., 20. ) ;
    TH2F* h_r2j_genjetht_vs_log10x2_sel0_pm = new TH2F( "h_r2j_genjetht_vs_log10x2_sel0_pm", "gen jet HT for -1<eta<2 vs x2, sel0, parton matched", 60, -4., 1., 60, 0., 20. ) ;
 
+   TH1F* h_qperp_sel3 = new TH1F( "h_qperp_sel3", "qperp", 40, 0., 10. ) ;
+   TH1F* h_qperp_sel3_pm = new TH1F( "h_qperp_sel3_pm", "qperp, parton matched", 40, 0., 10. ) ;
+
+   TH1F* h_qperp_over_pperp_sel3 = new TH1F( "h_qperp_over_pperp_sel3", "qperp/Pperp", 42, 0., 2.1 ) ;
+   TH1F* h_qperp_over_pperp_sel3_pm = new TH1F( "h_qperp_over_pperp_sel3_pm", "qperp/Pperp, parton matched", 42, 0., 2.1 ) ;
+
+   TH2F* h_qperp_vs_Pperp_sel3 = new TH2F( "h_qperp_vs_Pperp_sel3", "qperp vs Pperp", 40, 0., 8.,  40, 0., 8. ) ;
+   TH2F* h_qperp_vs_Pperp_sel3_pm = new TH2F( "h_qperp_vs_Pperp_sel3_pm", "qperp vs Pperp, parton matched", 40, 0., 8.,  40, 0., 8. ) ;
+
+   TH2F* h_log10x2_vs_log10x1_sel4 = new TH2F( "h_log10x2_vs_log10x1_sel4", "log10x2 vs x2, sel4", 60, -4., 1., 60, -4., 1. ) ;
+   TH2F* h_log10x2_vs_log10x1_sel4_pm = new TH2F( "h_log10x2_vs_log10x1_sel4_pm", "log10x2 vs x2, sel4, parton matched", 60, -4., 1., 60, -4., 1. ) ;
+
    Long64_t nentries = fChain->GetEntries();
 
    TStopwatch tsw_loop ;
@@ -522,7 +536,8 @@ void calo_analysis4::Loop( bool verbose ) {
 
 
 
-   float weight = dset_pp_weight_per_ipb * 1.3 * 197 ; // 1.3 1/pb of pA, mass number of gold is 197
+   float weight = dset_pp_weight_per_ipb * 1.3 * 197 * 0.40 ; // 1.3 1/pb of pA, mass number of gold is 197
+                                                              //  The factor of 0.4 is for the fraction that's fiducial in the FCS.
 
 
 
@@ -863,11 +878,17 @@ void calo_analysis4::Loop( bool verbose ) {
                      h_jet1eta_vs_jet0eta_sel3 -> Fill( Jet05_Eta[0], Jet05_Eta[1], weight ) ;
                      h_r2j_genjetht_sel3 -> Fill( genjetht, weight ) ;
 
+
                      h_gp1dr_vs_gp0dr_sel3 -> Fill( gp0dr, gp1dr, weight ) ;
 
                      if ( gp0dr < 1.0 && gp1dr < 1.0 ) { h_r2j_genjetht_sel3_pm -> Fill( genjetht, weight ) ; } else { h_r2j_genjetht_sel3_npm -> Fill( genjetht, weight ) ; }
 
                      if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_log10x1_sel3_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+
+                     if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_jet1pt_vs_jet0pt_sel3_pm -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+                     if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_jet1eta_vs_jet0eta_sel3_pm -> Fill( Jet05_Eta[0], Jet05_Eta[1], weight ) ;
+
+
 
             float Pperp_random_sign = 1. ;
             if ( gRandom -> Integer(2) == 1 ) Pperp_random_sign = -1. ;
@@ -894,6 +915,14 @@ void calo_analysis4::Loop( bool verbose ) {
             float qperpy =       ( jet0py + jet1py ) ;
             float qperp = sqrt( qperpx*qperpx + qperpy*qperpy ) ;
 
+            h_qperp_sel3 -> Fill( qperp, weight ) ;
+            h_qperp_over_pperp_sel3 -> Fill( qperp/Pperp, weight ) ;
+            h_qperp_vs_Pperp_sel3 -> Fill( Pperp, qperp, weight ) ;
+
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_qperp_sel3_pm -> Fill( qperp, weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_qperp_over_pperp_sel3_pm -> Fill( qperp/Pperp, weight ) ;
+            if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_qperp_vs_Pperp_sel3_pm -> Fill( Pperp, qperp, weight ) ;
+
             float phi_Pperp = atan2( Pperpy, Pperpx ) ;
             float phi_qperp = atan2( qperpy, qperpx ) ;
 
@@ -906,6 +935,10 @@ void calo_analysis4::Loop( bool verbose ) {
             h_n_fiducial -> Fill( n_fid, weight ) ;
 
 
+                     if ( qperp/Pperp < 0.3 ) {
+                                                          h_log10x2_vs_log10x1_sel4    -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+                        if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_log10x1_sel4_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
+                     }
 
             float rec_dphi_0to2pi = rec_dphi ;
             if ( rec_dphi < 0 ) rec_dphi_0to2pi = rec_dphi_0to2pi + 2*3.14159265 ;
