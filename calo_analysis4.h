@@ -639,7 +639,79 @@ calo_analysis4::calo_analysis4( const char* arg_dset_name ) : fChain(0)
    dset_total_pp_xsec_mb = -1. ;
    dset_ngen0_mc = 0 ;
 
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
 
+   if ( strcmp( arg_dset_name, "test1.0" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-allgp-30x50M-2022-10-18a/*.root") ;
+
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 1.25e9 ;
+      dset_total_pp_xsec_mb = 113.7 ;
+      dset_pthatmin = 1.0 ;
+      dset_pthatmax = 999.0 ;
+
+      tree = ch ;
+
+
+   }
+
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+   if ( strcmp( arg_dset_name, "test1.0to1.8" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03b/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03c/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03d/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03e/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-04a/*.root") ;
+
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 2.33e9 ;
+      dset_total_pp_xsec_mb = 94.0 ;
+      dset_pthatmin = 1.0 ;
+      dset_pthatmax = 1.8 ;
+
+      tree = ch ;
+
+
+   }
+
+
+  //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+   if ( strcmp( arg_dset_name, "test1.8" ) == 0 ) {
+
+      int nfiles(0) ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-01a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-02b/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-02c/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-02d/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x30M-2022-11-03a/*.root") ;
+
+
+      printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
+
+      dset_ngen0_mc = 1.850e9 ;
+      dset_total_pp_xsec_mb = 19.73 ;
+      dset_pthatmin = 1.8 ;
+      dset_pthatmax = 999.0 ;
+
+      tree = ch ;
+
+
+   }
 
 
   //-------------------------------------------------------------------------------------------------------------------------------------------------

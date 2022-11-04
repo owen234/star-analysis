@@ -212,6 +212,8 @@ void calo_analysis4::Loop( bool verbose ) {
    TH2F* h_r2j_Pperp_gen_vs_rec = new TH2F( "h_r2j_Pperp_gen_vs_rec", "Rec 2 jets, Pperp, gen vs rec", 60, 0., 8.,  60, 0., 8. ) ;
    TH2F* h_r2j_qperp_gen_vs_rec = new TH2F( "h_r2j_qperp_gen_vs_rec", "Rec 2 jets, qperp, gen vs rec", 60, 0., 8.,  60, 0., 8. ) ;
 
+   TH2F* h_r2j_qperp_over_Pperp_rec_vs_gen = new TH2F( "h_r2j_qperp_over_Pperp_rec_vs_gen", "qperp/Pperp, rec vs gen", 60, 0., 2., 60, 0., 2. ) ;
+
 
    TH1F* h_r2j_qperp_over_Pperp = new TH1F( "h_r2j_qperp_over_Pperp", "Rec 2 jets, qperp/Pperp", 60, 0., 4. ) ;
    TH1F* h_r2j_2gj_qperp_over_Pperp = new TH1F( "h_r2j_2gj_qperp_over_Pperp", "Rec 2 jets, 2 gen jets, qperp/Pperp", 60, 0., 4. ) ;
@@ -519,6 +521,35 @@ void calo_analysis4::Loop( bool verbose ) {
    TH2F* h_log10x2_vs_log10x1_sel4 = new TH2F( "h_log10x2_vs_log10x1_sel4", "log10x2 vs x2, sel4", 60, -4., 1., 60, -4., 1. ) ;
    TH2F* h_log10x2_vs_log10x1_sel4_pm = new TH2F( "h_log10x2_vs_log10x1_sel4_pm", "log10x2 vs x2, sel4, parton matched", 60, -4., 1., 60, -4., 1. ) ;
 
+
+   TH1F* h_genparticleht_sel2 = new TH1F( "h_genparticleht_sel2", "gen particle HT, sel2", 60, 0., 60. ) ;
+   TH1F* h_genparticleht_sel3 = new TH1F( "h_genparticleht_sel3", "gen particle HT, sel3", 60, 0., 60. ) ;
+   TH1F* h_genparticleht_sel2_pm = new TH1F( "h_genparticleht_sel2_pm", "gen particle HT, sel2, parton matched", 60, 0., 60. ) ;
+   TH1F* h_genparticleht_sel3_pm = new TH1F( "h_genparticleht_sel3_pm", "gen particle HT, sel3, parton matched", 60, 0., 60. ) ;
+
+
+   TH2F* h_dphiqp_rec_vs_gen_qoplt03 = new TH2F( "h_dphiqp_rec_vs_gen_qoplt03", "delta phi(qperp, Pperp), rec vs gen, for q/P<0.3", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_rec_vs_gen_qoplt03_pm = new TH2F( "h_dphiqp_rec_vs_gen_qoplt03_pm", "delta phi(qperp, Pperp), rec vs gen, for q/P<0.3, parton matched", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphiqp_rec_vs_gen_qoplt03_gjeta26 = new TH2F( "h_dphiqp_rec_vs_gen_qoplt03_gjeta26", "delta phi(qperp, Pperp), rec vs gen, for q/P<0.3, gen jet eta>2.6", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_rec_vs_gen_qoplt03_gjeta26_pm = new TH2F( "h_dphiqp_rec_vs_gen_qoplt03_gjeta26_pm", "delta phi(qperp, Pperp), rec vs gen, for q/P<0.3, parton matched, gen jet eta>2.6", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphiqp_rec_vs_gen_qoplt03_gjeta30 = new TH2F( "h_dphiqp_rec_vs_gen_qoplt03_gjeta30", "delta phi(qperp, Pperp), rec vs gen, for q/P<0.3, gen jet eta>3.0", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_rec_vs_gen_qoplt03_gjeta30_pm = new TH2F( "h_dphiqp_rec_vs_gen_qoplt03_gjeta30_pm", "delta phi(qperp, Pperp), rec vs gen, for q/P<0.3, parton matched, gen jet eta>3.0", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphiqp_rec_vs_gen_qoplt10 = new TH2F( "h_dphiqp_rec_vs_gen_qoplt10", "delta phi(qperp, Pperp), rec vs gen, for q/P<1.0", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_rec_vs_gen_qoplt10_pm = new TH2F( "h_dphiqp_rec_vs_gen_qoplt10_pm", "delta phi(qperp, Pperp), rec vs gen, for q/P<1.0, parton matched", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphijj_rec_vs_gen = new TH2F( "h_dphijj_rec_vs_gen", "delta phi(jj), rec vs gen", 60, 3.14159265/2., 3*3.14159265/2.,  60, 3.14159265/2., 3*3.14159265/2. ) ;
+
+   TH2F* h_dphiqp_rec_vs_gen_tightdphi = new TH2F( "h_dphiqp_rec_vs_gen_tightdphi", "delta phi(qperp, Pperp), rec vs gen, tight dphijj cut", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_rec_vs_gen_tightdphi_pm = new TH2F( "h_dphiqp_rec_vs_gen_tightdphi_pm", "delta phi(qperp, Pperp), rec vs gen, tight dphijj cut, parton matched", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphiqp_rec_vs_gen_tightdphi_rec_rewrap = new TH2F( "h_dphiqp_rec_vs_gen_tightdphi_rec_rewrap", "delta phi(qperp, Pperp), rec vs gen, tight dphijj cut", 60, -3.2, 3.2, 120, -2*3.2, 2*3.2 ) ;
+   TH2F* h_dphiqp_rec_vs_gen_tightdphi_rec_rewrap_pm = new TH2F( "h_dphiqp_rec_vs_gen_tightdphi_rec_rewrap_pm", "delta phi(qperp, Pperp), rec vs gen, tight dphijj cut, parton matched", 60, -3.2, 3.2, 120, -2*3.2, 2*3.2 ) ;
+
+
+
    Long64_t nentries = fChain->GetEntries();
 
    TStopwatch tsw_loop ;
@@ -781,6 +812,11 @@ void calo_analysis4::Loop( bool verbose ) {
             if ( GenJet05_Eta[ji] < 2.0 && GenJet05_Eta[ji] > -1.0 ) genjetht += GenJet05_PT[ji] ;
          } // ji
 
+         float genparticleht = 0. ;
+         for ( int gpi=0; gpi<Particle_; gpi++ ) {
+            if ( Particle_Status[gpi] != 1 ) continue ;
+            if ( Particle_Eta[gpi] < 2.0 && Particle_Eta[gpi] > -1.0 ) genparticleht += Particle_PT[gpi] ;
+         } // gpi
 
 
          TLorentzVector tlv_parton1_in ;
@@ -869,6 +905,9 @@ void calo_analysis4::Loop( bool verbose ) {
 
                   if ( gp0dr < 1.0 && gp1dr < 1.0 ) { h_r2j_genjetht_sel2_pm -> Fill( genjetht, weight ) ; } else { h_r2j_genjetht_sel2_npm -> Fill( genjetht, weight ) ; }
 
+                  h_genparticleht_sel2 -> Fill( genparticleht, weight ) ;
+                  if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_genparticleht_sel2_pm -> Fill( genparticleht, weight ) ;
+
                   if ( genjetht < 0.1 ) {
 
                      h_log10x2_vs_log10x1_sel3 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
@@ -878,6 +917,8 @@ void calo_analysis4::Loop( bool verbose ) {
                      h_jet1eta_vs_jet0eta_sel3 -> Fill( Jet05_Eta[0], Jet05_Eta[1], weight ) ;
                      h_r2j_genjetht_sel3 -> Fill( genjetht, weight ) ;
 
+                     h_genparticleht_sel3 -> Fill( genparticleht, weight ) ;
+                     if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_genparticleht_sel3_pm -> Fill( genparticleht, weight ) ;
 
                      h_gp1dr_vs_gp0dr_sel3 -> Fill( gp0dr, gp1dr, weight ) ;
 
@@ -935,7 +976,8 @@ void calo_analysis4::Loop( bool verbose ) {
             h_n_fiducial -> Fill( n_fid, weight ) ;
 
 
-                     if ( qperp/Pperp < 0.3 ) {
+                     ////////if ( qperp/Pperp < 0.3 ) 
+                     if ( genparticleht<4.0 ) {
                                                           h_log10x2_vs_log10x1_sel4    -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
                         if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_log10x1_sel4_pm -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
                      }
@@ -1132,6 +1174,34 @@ void calo_analysis4::Loop( bool verbose ) {
 
                   float dphi_Pperp_qperp_recmgen = calc_dphi( dphi_Pperp_qperp, dphi_genPperp_genqperp ) ;
 
+                  if ( qperp/Pperp < 0.3 ) h_dphiqp_rec_vs_gen_qoplt03 -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                  if ( qperp/Pperp < 0.3 && gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_rec_vs_gen_qoplt03_pm -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+
+                  if ( GenJet05_Eta[ind_gj0]>2.6 && GenJet05_Eta[ind_gj1]>2.6 ) {
+                     if ( qperp/Pperp < 0.3 ) h_dphiqp_rec_vs_gen_qoplt03_gjeta26 -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                     if ( qperp/Pperp < 0.3 && gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_rec_vs_gen_qoplt03_gjeta26_pm -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                  }
+                  if ( GenJet05_Eta[ind_gj0]>3.0 && GenJet05_Eta[ind_gj1]>3.0 ) {
+                     if ( qperp/Pperp < 0.3 ) h_dphiqp_rec_vs_gen_qoplt03_gjeta30 -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                     if ( qperp/Pperp < 0.3 && gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_rec_vs_gen_qoplt03_gjeta30_pm -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                  }
+
+                  if ( qperp/Pperp < 1.0 ) h_dphiqp_rec_vs_gen_qoplt10 -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                  if ( qperp/Pperp < 1.0 && gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_rec_vs_gen_qoplt10_pm -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+
+                  if ( fabs( rec_dphi_0to2pi - 3.14159265 ) < 0.2 ) {
+                     h_dphiqp_rec_vs_gen_tightdphi -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                     if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_rec_vs_gen_tightdphi_pm -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+                  }
+
+                  float dphi_Pperp_qperp_rewrap = dphi_Pperp_qperp ;
+                  if ( dphi_Pperp_qperp > dphi_genPperp_genqperp + 3.14159265 ) dphi_Pperp_qperp_rewrap = dphi_Pperp_qperp_rewrap - 2*3.14159265 ;
+                  if ( dphi_Pperp_qperp < dphi_genPperp_genqperp - 3.14159265 ) dphi_Pperp_qperp_rewrap = dphi_Pperp_qperp_rewrap + 2*3.14159265 ;
+
+                  if ( fabs( rec_dphi_0to2pi - 3.14159265 ) < 0.2 ) {
+                     h_dphiqp_rec_vs_gen_tightdphi_rec_rewrap -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp_rewrap, weight ) ;
+                     if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_rec_vs_gen_tightdphi_rec_rewrap_pm -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp_rewrap, weight ) ;
+                  }
 
 
 
@@ -1149,6 +1219,8 @@ void calo_analysis4::Loop( bool verbose ) {
                   h_r2j_Pperp_gen_vs_rec -> Fill( Pperp, genPperp, weight ) ;
                   h_r2j_qperp_gen_vs_rec -> Fill( qperp, genqperp, weight ) ;
 
+                  h_r2j_qperp_over_Pperp_rec_vs_gen -> Fill( genqperp/genPperp, qperp/Pperp, weight ) ;
+
 
                   h_r2j_qperp_over_Pperp -> Fill( qperp / Pperp, weight ) ;
 
@@ -1163,6 +1235,7 @@ void calo_analysis4::Loop( bool verbose ) {
                   if ( n_fid == 2 ) h_jj_dphi_gen_fid -> Fill( gen_dphi_0to2pi, weight ) ;
 
 
+                  h_dphijj_rec_vs_gen -> Fill( gen_dphi_0to2pi, rec_dphi_0to2pi, weight ) ;
 
 
 

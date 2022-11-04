@@ -30,14 +30,19 @@ float theta_from_eta( float eta ) {
    return 2. * atan( exp( -1. * eta ) ) ;
 }
 
-void event_display1::Loop()
+void event_display1::Loop( bool big_canvas )
 {
    if (fChain == 0) return;
 
    gStyle -> SetOptStat(0) ;
 
-   //TCanvas* can = new TCanvas( "can", "phi vs eta", 50, 50, 1200, 1200 ) ;
-   TCanvas* can = new TCanvas( "can", "phi vs eta", 50, 50, 2000, 2000 ) ;
+   TCanvas* can(0x0) ;
+   if ( big_canvas ) {
+      can = new TCanvas( "can", "phi vs eta", 50, 50, 2000, 2000 ) ;
+   } else {
+      can = new TCanvas( "can", "phi vs eta", 50, 50, 1200, 1200 ) ;
+   }
+
 
    TPad* pad1 = new TPad("pad1","", 0.02, 0.52,  0.98, 0.98 ) ;
    pad1->Draw() ;
@@ -139,6 +144,8 @@ void event_display1::Loop()
     //
     //
 
+      if ( Particle_PT[4] < 1.8 ) continue ; //--- simulate pthat > 1.8
+
       if ( Jet05_ < 2 ) continue ;
       if ( Jet05_Eta[0] < 2.6 ) continue ;
       if ( Jet05_Eta[1] < 2.6 ) continue ;
@@ -156,7 +163,15 @@ void event_display1::Loop()
          if ( GenJet05_Eta[ji] < 2.0 && GenJet05_Eta[ji] > -1.0 ) genjetht += GenJet05_PT[ji] ;
       } // ji
 
+      float genparticleht = 0. ;
+      for ( int gpi=0; gpi<Particle_; gpi++ ) {
+         if ( Particle_Status[gpi] != 1 ) continue ;
+         if ( Particle_Eta[gpi] < 2.0 && Particle_Eta[gpi] > -1.0 ) genparticleht += Particle_PT[gpi] ;
+      } // gpi
+
+
       if ( genjetht > 0.1 ) continue ;
+      //if ( genjetht < 5 ) continue ;
 
 
 
@@ -180,7 +195,7 @@ void event_display1::Loop()
 
          sprintf( pname, "%s", mcname( Particle_PID[pi] ) ) ;
          if ( Particle_Status[pi] > 30 || Particle_Status[pi] == 2 ) continue ;
-         printf("  %3d :  PID %7d  %8s  Status %6d  M1 %5d M2 %5d  D1 %5d D2 %5d  q %3d  m %8.3f  E %9.2f  Pt = %7.2f Eta = %9.3f\n",
+         printf("  %3d :  PID %7d  %8s  Status %6d  M1 %5d M2 %5d  D1 %5d D2 %5d  q %3d  m %8.3f  E %9.2f  Pt = %7.2f Eta = %9.3f",
             pi,
             Particle_PID[pi],
             pname,
@@ -195,8 +210,12 @@ void event_display1::Loop()
             Particle_PT[pi],
             Particle_Eta[pi]
             ) ;
+         if ( Particle_Status[pi] == 1 && Particle_Eta[pi] > -1.0 && Particle_Eta[pi] < 2.0 ) { printf(" *") ; }
+         printf("\n") ;
 
       } // pi
+
+      printf("\n\n  Gen jet HT = %.2f   Gen particle HT = %.2f\n\n", genjetht, genparticleht ) ;
 
       pad1 -> cd() ;
 
@@ -242,13 +261,13 @@ void event_display1::Loop()
          printf("  GenJet05 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
       } // ji
 
-      printf("\n") ;
-      for ( int ji=0; ji<GenJet10_; ji++ ) {
-         float eta = GenJet10_Eta[ji] ;
-         float phi = GenJet10_Phi[ji] ;
-         float pt  = GenJet10_PT[ji] ;
-         printf("  GenJet10 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
-      } // ji
+////  printf("\n") ;
+////  for ( int ji=0; ji<GenJet10_; ji++ ) {
+////     float eta = GenJet10_Eta[ji] ;
+////     float phi = GenJet10_Phi[ji] ;
+////     float pt  = GenJet10_PT[ji] ;
+////     printf("  GenJet10 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
+////  } // ji
 
       printf("\n") ;
       for ( int ji=0; ji<Jet05_; ji++ ) {
@@ -260,13 +279,14 @@ void event_display1::Loop()
                          eta+jet_pt_bar_deta + jet_pt_bar_scale*pt, phi+jet_pt_bar_dphi ) ;
          printf("  RecJet05 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
       } // ji
-      printf("\n") ;
-      for ( int ji=0; ji<Jet10_; ji++ ) {
-         float eta = Jet10_Eta[ji] ;
-         float phi = Jet10_Phi[ji] ;
-         float pt  = Jet10_PT[ji] ;
-         printf("  RecJet10 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
-      } // ji
+
+////  printf("\n") ;
+////  for ( int ji=0; ji<Jet10_; ji++ ) {
+////     float eta = Jet10_Eta[ji] ;
+////     float phi = Jet10_Phi[ji] ;
+////     float pt  = Jet10_PT[ji] ;
+////     printf("  RecJet10 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
+////  } // ji
 
       pad1 -> Update() ;
       pad1 -> Draw() ;
@@ -345,13 +365,13 @@ void event_display1::Loop()
 
       float dphi_Pperp_qperp = calc_dphi( phi_Pperp, phi_qperp ) ;
 
-      arrow -> SetLineWidth(6) ;
-      arrow -> SetLineColor( 1 ) ;
-      arrow -> DrawArrow( 0., 0.,  Pperpx, Pperpy, 0.02 ) ;
+   // arrow -> SetLineWidth(6) ;
+   // arrow -> SetLineColor( 1 ) ;
+   // arrow -> DrawArrow( 0., 0.,  Pperpx, Pperpy, 0.02 ) ;
 
-      arrow -> SetLineWidth(6) ;
-      arrow -> SetLineColor( 6 ) ;
-      arrow -> DrawArrow( 0., 0.,  qperpx, qperpy, 0.02 ) ;
+   // arrow -> SetLineWidth(6) ;
+   // arrow -> SetLineColor( 6 ) ;
+   // arrow -> DrawArrow( 0., 0.,  qperpx, qperpy, 0.02 ) ;
 
 
       pad2 -> Update() ;

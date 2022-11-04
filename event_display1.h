@@ -612,7 +612,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop();
+   virtual void     Loop( bool big_canvas = true );
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
 };
@@ -629,7 +629,12 @@ event_display1::event_display1(TTree *tree) : fChain(0)
    //ch->Add("../../delphes/delphes/output-rjf-pthat0.0-jpt2.0-allgp-30x10M-2022-10-22a/*.root") ;
    //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-30x50M-2022-10-23a/*.root") ;
    //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt3-allgp-30x50M-2022-10-18a/*.root") ;
-   ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-21a/*.root") ;
+   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat5.0-jpt3-allgp-30x10M-2022-10-21a/*.root") ;
+   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat0.0-jpt2-allgp-30x10M-2022-10-22a/*.root") ;
+   ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-01a/*.root") ;
+   //ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.8-rjpt3-gjpt2-allgp-30x100k-2022-11-02a/*.root") ;
+   //
+   printf("\n\n Number of events in chain:  %lld\n\n", ch->GetEntries() ) ;
 
    tree = ch ;
 
