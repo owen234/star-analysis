@@ -23,8 +23,8 @@
 
 
 
-      hp2d -> SetXTitle( "qperp (GeV), from gen jets" ) ;
-      hp2d -> SetYTitle( "qperp (GeV), from reconstructed jets" ) ;
+      hp2d -> SetXTitle( "q_{#perp}  (GeV), from gen jets" ) ;
+      hp2d -> SetYTitle( "q_{#perp}  (GeV), from reconstructed jets" ) ;
 
       hp2d -> SetTitleOffset( 1.4, "x" ) ;
       hp2d -> SetTitleOffset( 1.4, "y" ) ;

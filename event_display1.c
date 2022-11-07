@@ -150,8 +150,8 @@ void event_display1::Loop( bool big_canvas )
       if ( Jet05_Eta[0] < 2.6 ) continue ;
       if ( Jet05_Eta[1] < 2.6 ) continue ;
 
-      if ( Jet05_PT[0] < 3.0 ) continue ;
-      if ( Jet05_PT[1] < 3.0 ) continue ;
+      if ( Jet05_PT[0] < 4.0 ) continue ;
+      if ( Jet05_PT[1] < 4.0 ) continue ;
 
       float rec_dphi = calc_dphi( Jet05_Phi[0], Jet05_Phi[1] ) ;
 
@@ -170,8 +170,9 @@ void event_display1::Loop( bool big_canvas )
       } // gpi
 
 
-      if ( genjetht > 0.1 ) continue ;
+      //if ( genjetht > 0.1 ) continue ;
       //if ( genjetht < 5 ) continue ;
+
 
 
 
@@ -314,9 +315,9 @@ void event_display1::Loop( bool big_canvas )
          float pt = Particle_PT[pi] ;
          float px = pt * cos( phi ) ;
          float py = pt * sin( phi ) ;
-         arrow -> SetLineWidth(3) ;
-         arrow -> SetLineColor( 4 ) ;
-         arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
+     //  arrow -> SetLineWidth(3) ;
+     //  arrow -> SetLineColor( 4 ) ;
+     //  arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
       } // pi
 
       for ( int ji=0; ji<GenJet05_; ji++ ) {
@@ -325,9 +326,11 @@ void event_display1::Loop( bool big_canvas )
          float pt  = GenJet05_PT[ji] ;
          float px = pt * cos( phi ) ;
          float py = pt * sin( phi ) ;
-         arrow -> SetLineWidth(3) ;
-         arrow -> SetLineColor( 3 ) ;
-         arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
+         if ( eta > 2.4 ) {
+            arrow -> SetLineWidth(3) ;
+            arrow -> SetLineColor( 3 ) ;
+            arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
+         }
       } // ji
 
       for ( int ji=0; ji<Jet05_; ji++ ) {
@@ -365,14 +368,70 @@ void event_display1::Loop( bool big_canvas )
 
       float dphi_Pperp_qperp = calc_dphi( phi_Pperp, phi_qperp ) ;
 
-   // arrow -> SetLineWidth(6) ;
-   // arrow -> SetLineColor( 1 ) ;
-   // arrow -> DrawArrow( 0., 0.,  Pperpx, Pperpy, 0.02 ) ;
+      arrow -> SetLineWidth(6) ;
+      arrow -> SetLineColor( 1 ) ;
+      arrow -> DrawArrow( 0., 0.,  Pperpx, Pperpy, 0.02 ) ;
 
-   // arrow -> SetLineWidth(6) ;
-   // arrow -> SetLineColor( 6 ) ;
-   // arrow -> DrawArrow( 0., 0.,  qperpx, qperpy, 0.02 ) ;
+      arrow -> SetLineWidth(6) ;
+      arrow -> SetLineColor( 6 ) ;
+      arrow -> DrawArrow( 0., 0.,  qperpx, qperpy, 0.02 ) ;
 
+         int ind_gj0(-1) ;
+         int ind_gj1(-1) ;
+         float gj0dr = 9999999. ;
+         float gj1dr = 9999999. ;
+         for ( int ji=0; ji<GenJet05_; ji++ ) {
+            float dr0 = calc_dR( Jet05_Phi[0], GenJet05_Phi[ji], Jet05_Eta[0], GenJet05_Eta[ji] ) ;
+            if ( dr0 < gj0dr ) {
+               ind_gj0 = ji ;
+               gj0dr = dr0 ;
+            }
+            float dr1 = calc_dR( Jet05_Phi[1], GenJet05_Phi[ji], Jet05_Eta[1], GenJet05_Eta[ji] ) ;
+            if ( dr1 < gj1dr ) {
+               ind_gj1 = ji ;
+               gj1dr = dr1 ;
+            }
+         } // ji
+
+         bool has_2gjm(false) ;
+         if ( ind_gj0>=0 && ind_gj1>=0 && ind_gj0!=ind_gj1 && gj0dr<0.3 && gj1dr<0.3 ) has_2gjm = true ;
+
+         if ( has_2gjm ) {
+                  float genjet0px = GenJet05_PT[ind_gj0]*cos(GenJet05_Phi[ind_gj0]) ;
+                  float genjet0py = GenJet05_PT[ind_gj0]*sin(GenJet05_Phi[ind_gj0]) ;
+                  float genjet0theta = theta_from_eta( GenJet05_Eta[ind_gj0] ) ;
+                  float genjet0pz = GenJet05_PT[ind_gj0] / tan(genjet0theta) ;
+
+                  float genjet1px = GenJet05_PT[ind_gj1]*cos(GenJet05_Phi[ind_gj1]) ;
+                  float genjet1py = GenJet05_PT[ind_gj1]*sin(GenJet05_Phi[ind_gj1]) ;
+                  float genjet1theta = theta_from_eta( GenJet05_Eta[ind_gj1] ) ;
+                  float genjet1pz = GenJet05_PT[ind_gj1] / tan(genjet0theta) ;
+
+                  float genPperpx = 0.5 * ( genjet0px - genjet1px ) * Pperp_random_sign ;
+                  float genPperpy = 0.5 * ( genjet0py - genjet1py ) * Pperp_random_sign ;
+                  float genPperp = sqrt( genPperpx*genPperpx + genPperpy*genPperpy ) ;
+
+                  float genqperpx =       ( genjet0px + genjet1px ) ;
+                  float genqperpy =       ( genjet0py + genjet1py ) ;
+                  float genqperp = sqrt( genqperpx*genqperpx + genqperpy*genqperpy ) ;
+
+                  float phi_genPperp = atan2( genPperpy, genPperpx ) ;
+                  float phi_genqperp = atan2( genqperpy, genqperpx ) ;
+
+                  float dphi_genPperp_genqperp = calc_dphi( phi_genPperp, phi_genqperp ) ;
+
+      arrow -> SetLineStyle( 3 ) ;
+
+      arrow -> SetLineWidth(6) ;
+      arrow -> SetLineColor( 1 ) ;
+      arrow -> DrawArrow( 0., 0.,  genPperpx, genPperpy, 0.02, ">" ) ;
+
+      arrow -> SetLineWidth(6) ;
+      arrow -> SetLineColor( 6 ) ;
+      arrow -> DrawArrow( 0., 0.,  genqperpx, genqperpy, 0.02, ">" ) ;
+
+      arrow -> SetLineStyle( 1 ) ;
+         }
 
       pad2 -> Update() ;
       pad2 -> Draw() ;

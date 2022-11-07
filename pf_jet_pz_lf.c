@@ -2,7 +2,7 @@
 #include "histio.c"
 #include "utils.c"
 
-   void pf_jet_pt( const char* infile = "ca4-output/all.root" ) {
+   void pf_jet_pt_lf( const char* infile = "ca4-output/all.root" ) {
 
 
       gStyle -> SetOptStat("mr") ;
@@ -50,37 +50,60 @@
 
     //---------------
 
-      TH1D* h_pz0 = h_pz1_vs_pz0 -> ProjectionX() ;
-      TH1D* h_pz1 = h_pz1_vs_pz0 -> ProjectionY() ;
+      TH1D* hp1da = h_pz1_vs_pz0 -> ProjectionX() ;
+      TH1D* hp1db = h_pz1_vs_pz0 -> ProjectionY() ;
 
-      h_pz0 -> SetLineWidth(3) ;
-      h_pz1 -> SetLineWidth(3) ;
+      hp1da -> SetLineWidth(3) ;
+      hp1db -> SetLineWidth(3) ;
 
-      h_pz0 -> SetLineColor(4) ;
-      h_pz1 -> SetLineColor(2) ;
+      hp1da -> SetLineColor(4) ;
+      hp1db -> SetLineColor(2) ;
 
-      h_pz1 -> SetXTitle( "Jet pz (GeV)" ) ;
-      h_pz1 -> SetYTitle( "Events" ) ;
+      hp1db -> SetXTitle( "Jet pz (GeV)" ) ;
+      hp1db -> SetYTitle( "Events" ) ;
 
-      h_pz1 -> SetTitleOffset( 1.4, "x" ) ;
-      h_pz1 -> SetTitleOffset( 1.6, "y" ) ;
+      gStyle -> SetPadRightMargin(0.05) ;
+      gStyle -> SetPadBottomMargin(0.18) ;
+      gStyle -> SetPadLeftMargin(0.20) ;
+
+      gStyle -> SetStatX(0.89) ;
+      gStyle -> SetStatY(0.85) ;
+      gStyle -> SetStatW(0.40) ;
+      gStyle -> SetStatH(0.25) ;
+
+      hp1da -> SetLabelSize( 0.065, "x" ) ;
+      hp1da -> SetLabelSize( 0.065, "y" ) ;
+      hp1da -> SetTitleSize( 0.065, "x" ) ;
+      hp1da -> SetTitleSize( 0.065, "y" ) ;
+
+      hp1db -> SetLabelSize( 0.065, "x" ) ;
+      hp1db -> SetLabelSize( 0.065, "y" ) ;
+      hp1db -> SetTitleSize( 0.065, "x" ) ;
+      hp1db -> SetTitleSize( 0.065, "y" ) ;
+
+      hp1db -> SetTitleOffset( 1.6, "y" ) ;
+      hp1db -> SetTitleOffset( 1.3, "x" ) ;
+      hp1da -> SetTitleOffset( 1.6, "y" ) ;
+      hp1da -> SetTitleOffset( 1.3, "x" ) ;
+
+      hp1da -> SetNdivisions(505) ;
+      hp1db -> SetNdivisions(505) ;
+
 
       TCanvas* can2 = get_canvas( "can2", "", 950, 50, 900, 900 ) ;
       can2 -> cd() ;
       can2 -> Clear() ;
 
-      h_pz0 -> Draw("hist") ;
+      hp1da -> Draw("hist") ;
       gPad->Update() ;
-      h_pz1 -> Draw("hist") ;
+      hp1db -> Draw("hist") ;
       gPad->Update() ;
 
-      h_pz1 -> Draw("hist") ;
-      h_pz0 -> Draw("hist same") ;
-      h_pz1 -> Draw("same") ;
-      h_pz0 -> Draw("same") ;
+      hp1db -> Draw("hist") ;
+      hp1da -> Draw("hist same") ;
+      hp1db -> Draw("same") ;
+      hp1da -> Draw("same") ;
 
-      TH1D* hp1da = h_pz1 ;
-      TH1D* hp1db = h_pz0 ;
 
       TPaveStats* tpsa = (TPaveStats*) hp1da -> GetListOfFunctions()->FindObject("stats") ;
       if ( tpsa != 0x0 ) {

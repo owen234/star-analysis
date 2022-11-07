@@ -2,7 +2,7 @@
 #include "histio.c"
 #include "utils.c"
 
-   void pf_dphijj( const char* infile = "ca4-output/all.root" ) {
+   void pf_dphijj_lf( const char* infile = "ca4-output/all.root" ) {
 
 
       //gStyle -> SetOptStat("mri") ;
@@ -40,10 +40,23 @@
 
     //---------------
 
+      gStyle -> SetPadRightMargin(0.02) ;
+      gStyle -> SetPadBottomMargin(0.18) ;
+      gStyle -> SetPadLeftMargin(0.20) ;
+
+      TCanvas* can2 = get_canvas( "can2", "", 950, 50, 900, 900 ) ;
+      can2 -> cd() ;
+      can2 -> Clear() ;
+
       TH1D* hp = hp2d -> ProjectionY() ;
 
       hp -> SetLineWidth(3) ;
       hp -> SetLineWidth(3) ;
+
+      hp -> SetLabelSize( 0.065, "x" ) ;
+      hp -> SetLabelSize( 0.065, "y" ) ;
+      hp -> SetTitleSize( 0.065, "x" ) ;
+      hp -> SetTitleSize( 0.065, "y" ) ;
 
 
       hp -> SetXTitle( "dphi(jj), reconstructed jets" ) ;
@@ -51,10 +64,6 @@
 
       hp -> SetTitleOffset( 1.4, "x" ) ;
       hp -> SetTitleOffset( 1.6, "y" ) ;
-
-      TCanvas* can2 = get_canvas( "can2", "", 950, 50, 900, 900 ) ;
-      can2 -> cd() ;
-      can2 -> Clear() ;
 
       hp -> Draw("hist") ;
       hp -> Draw("same") ;

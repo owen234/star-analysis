@@ -749,10 +749,40 @@ calo_analysis4::calo_analysis4( const char* arg_dset_name ) : fChain(0)
       nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x1M-2022-10-29a/*.root") ;
       nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-30x40M-2022-10-30a/*.root") ;
 
+      dset_ngen0_mc = 1.49e9 ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03b/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03c/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03d/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x10M-2022-11-03e/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-04a/*.root") ;
+
+      dset_ngen0_mc += 2.33e9 ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-04b/*.root") ;
+
+      dset_ngen0_mc += 1.04e9 ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-05a/*.root") ;
+
+      dset_ngen0_mc += 1.20e9 ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-05b/*.root") ;
+
+      dset_ngen0_mc += 1.20e9 ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-06a/*.root") ;
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-06b/*.root") ;
+
+      dset_ngen0_mc += 2.24e9 ;
+
+      nfiles += ch->Add("../../delphes/delphes/output-rjf-2jR-pthat1.0to1.8-rjpt3-gjpt2-allgp-30x40M-2022-11-06c/*.root") ;
+
+      dset_ngen0_mc += 1.04e9 ;
 
       printf("\n\n Loaded %d files for %s dataset\n\n", nfiles, arg_dset_name ) ;
 
-      dset_ngen0_mc = 1.49e9 ;
+
       dset_total_pp_xsec_mb = 93.5 ;
       dset_pthatmin = 1.0 ;
       dset_pthatmax = 1.8 ;

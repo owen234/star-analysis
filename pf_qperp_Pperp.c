@@ -18,8 +18,8 @@
 
       TH2F* hp2d = get_hist2d( "h_qperp_vs_Pperp_sel3" ) ;
 
-      hp2d -> SetXTitle( "Average jet pT (Pperp)" ) ;
-      hp2d -> SetYTitle( "Imbalance in jet pT (qperp)" ) ;
+      hp2d -> SetXTitle( "Average jet pT (P_{#perp}  )" ) ;
+      hp2d -> SetYTitle( "Imbalance in jet pT (q_{#perp}  )" ) ;
 
 
       //hp2d -> GetXaxis() -> SetRangeUser( 2.2, 8. ) ;
@@ -52,6 +52,15 @@
       h_pperp -> SetLineColor(4) ;
       h_qperp -> SetLineColor(2) ;
 
+      h_pperp -> SetYTitle( "Events" ) ;
+      h_qperp -> SetYTitle( "Events" ) ;
+
+      h_pperp -> SetTitleOffset( 1.4, "x" ) ;
+      h_pperp -> SetTitleOffset( 1.7, "y" ) ;
+      h_qperp -> SetTitleOffset( 1.4, "x" ) ;
+      h_qperp -> SetTitleOffset( 1.9, "y" ) ;
+
+
 
       //hp1db -> SetLineColor(2) ;
 
@@ -65,6 +74,9 @@
 
       h_pperp -> Draw( ) ;
       h_pperp -> Draw( "same hist" ) ;
+      gPad -> SetLogy(1) ;
+
+      can2 -> SaveAs( "plots/pf_pperp.pdf" ) ;
 
 
       TCanvas* can3 = get_canvas( "can3", "", 1550, 150, 900, 900 ) ;
@@ -73,6 +85,8 @@
 
       h_qperp -> Draw( ) ;
       h_qperp -> Draw( "same hist" ) ;
+
+      can3 -> SaveAs( "plots/pf_qperp.pdf" ) ;
 
 
 

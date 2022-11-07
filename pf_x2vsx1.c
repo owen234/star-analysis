@@ -41,7 +41,7 @@
       gPad->SetLogx(1) ;
       gPad->SetLogy(1) ;
 
-      can -> SaveAs( "pf_x2vsx1.pdf" ) ;
+      can -> SaveAs( "plots/pf_x2vsx1.pdf" ) ;
 
     //-------------------
 
@@ -93,6 +93,7 @@
       gPad -> SetLogx(1) ;
 
 
+      can2 -> SaveAs( "plots/pf_x2_and_x1.pdf" ) ;
 
    }
 
