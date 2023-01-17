@@ -20,21 +20,22 @@
 
       loadHist( infile ) ;
 
-      TH2F* hp2d = get_hist2d( "h_jet1pt_vs_jet0pt_sel3" ) ;
+      TH2F* hp2d = get_hist2d( "h_jet1pt_vs_jet0pt_sel3_v2" ) ;
 
-      TH1D* h_jpt1 = hp2d -> ProjectionY() ;
+      ////////TH1D* h_jpt1 = hp2d -> ProjectionY() ;
+      TH1D* h_jpt0 = hp2d -> ProjectionX() ;
 
 
       //h_jpt1 -> Draw() ;
       //gPad -> SetLogy(1) ;
 
-      TH1F* h_cumulative = make_cumulative_hist( (TH1F*) h_jpt1 ) ;
+      TH1F* h_cumulative = make_cumulative_hist( (TH1F*) h_jpt0 ) ;
 
       h_cumulative->SetLineWidth(3) ;
 
-      h_cumulative -> GetXaxis() -> SetRangeUser( 2.7, 8 ) ;
+      h_cumulative -> GetXaxis() -> SetRangeUser( 3.7, 10 ) ;
 
-      h_cumulative-> SetXTitle( "Minimum jet pT (GeV)" ) ;
+      h_cumulative-> SetXTitle( "Minimum leading jet pT (GeV)" ) ;
       h_cumulative-> SetYTitle( "Number of p+A events in 1.3 1/pb" ) ;
 
       h_cumulative-> SetTitleOffset( 1.4, "y" ) ;

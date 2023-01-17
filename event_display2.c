@@ -1,8 +1,11 @@
-#define event_display1_cxx
-#include "event_display1.h"
+#define event_display2_cxx
+#include "event_display2.h"
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
+
+//--- clean event is 449
+//    dirty event is 598
 
 char pname[100] ;
 
@@ -30,27 +33,50 @@ float theta_from_eta( float eta ) {
    return 2. * atan( exp( -1. * eta ) ) ;
 }
 
-void event_display1::Loop( bool big_canvas )
+void event_display2::Loop( int first_evt, bool big_canvas )
 {
+
+   gStyle -> SetPadTopMargin(0.08) ;
+   gStyle -> SetPadBottomMargin(0.17) ;
+
    if (fChain == 0) return;
 
    gStyle -> SetOptStat(0) ;
 
    TCanvas* can(0x0) ;
    if ( big_canvas ) {
-      can = new TCanvas( "can", "phi vs eta", 50, 50, 2000, 2000 ) ;
+      can = new TCanvas( "can", "phi vs eta", 50, 50, 2000, 1000 ) ;
    } else {
-      can = new TCanvas( "can", "phi vs eta", 50, 50, 1200, 1200 ) ;
+      can = new TCanvas( "can", "phi vs eta", 50, 50, 1200, 600 ) ;
    }
 
 
-   TPad* pad1 = new TPad("pad1","", 0.02, 0.52,  0.98, 0.98 ) ;
-   pad1->Draw() ;
-   pad1->cd() ;
+// TPad* pad1 = new TPad("pad1","", 0.02, 0.52,  0.98, 0.98 ) ;
+// pad1->Draw() ;
+// pad1->cd() ;
 
    TH2F* hp = new TH2F( "hp", "",   500,    -6., 6.,  500, -3.14159265, 3.14159265   ) ;
    hp -> SetXTitle( "eta" ) ;
    hp -> SetYTitle( "phi" ) ;
+
+   //hp -> SetTitleSize( 0.065, "x" ) ;
+   //hp -> SetTitleSize( 0.065, "y" ) ;
+   //hp -> SetLabelSize( 0.055, "x" ) ;
+   //hp -> SetLabelSize( 0.055, "y" ) ;
+   //hp -> SetTitleOffset( 0.5, "y" ) ;
+
+   //hp -> SetTitleSize( 0.075, "x" ) ;
+   //hp -> SetTitleSize( 0.075, "y" ) ;
+   //hp -> SetLabelSize( 0.065, "x" ) ;
+   //hp -> SetLabelSize( 0.065, "y" ) ;
+   //hp -> SetTitleOffset( 0.5, "y" ) ;
+
+   hp -> SetTitleSize( 0.090, "x" ) ;
+   hp -> SetTitleSize( 0.090, "y" ) ;
+   hp -> SetLabelSize( 0.075, "x" ) ;
+   hp -> SetLabelSize( 0.075, "y" ) ;
+   hp -> SetTitleOffset( 0.5, "y" ) ;
+   hp -> SetTitleOffset( 0.8, "x" ) ;
 
    hp -> Draw() ;
    gPad -> SetGridx(1) ;
@@ -65,12 +91,14 @@ void event_display1::Loop( bool big_canvas )
 
    char label[100] ;
    TText* text = new TText() ;
-   text -> SetTextSize(0.03) ;
-   text -> SetTextFont( 82 ) ;
+   //text -> SetTextFont( 82 ) ;
+   text -> SetTextSize(0.05) ;
+   text -> SetTextFont( 62 ) ;
 
    TMarker* marker_gp = new TMarker() ;
    marker_gp -> SetMarkerStyle( 22 ) ;
-   marker_gp -> SetMarkerSize( 2.5 ) ;
+   //marker_gp -> SetMarkerSize( 2.5 ) ;
+   marker_gp -> SetMarkerSize( 4.5 ) ;
    marker_gp -> SetMarkerColor( 4 ) ;
 
    TMarker* marker_fsp = new TMarker() ;
@@ -133,7 +161,8 @@ void event_display1::Loop( bool big_canvas )
    Long64_t nentries = fChain->GetEntries();
 
    Long64_t nbytes = 0, nb = 0;
-   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+
+   for (Long64_t jentry=first_evt; jentry<nentries;jentry++) {
 
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
@@ -150,7 +179,7 @@ void event_display1::Loop( bool big_canvas )
       if ( Jet05_Eta[0] < 2.6 ) continue ;
       if ( Jet05_Eta[1] < 2.6 ) continue ;
 
-      if ( Jet05_PT[0] < 4.0 ) continue ;
+      if ( Jet05_PT[0] < 3.0 ) continue ;
       if ( Jet05_PT[1] < 3.0 ) continue ;
 
       float rec_dphi = calc_dphi( Jet05_Phi[0], Jet05_Phi[1] ) ;
@@ -171,56 +200,9 @@ void event_display1::Loop( bool big_canvas )
 
 
       //if ( genjetht > 0.1 ) continue ;
+      //if ( genparticleht > 4 ) continue ;
+
       //if ( genjetht < 5 ) continue ;
-
-
-
-      float Pperp_random_sign = 1. ;
-      if ( gRandom -> Integer(2) == 1 ) Pperp_random_sign = -1. ;
-
-      float jet0px = Jet05_PT[0]*cos(Jet05_Phi[0]) ;
-      float jet0py = Jet05_PT[0]*sin(Jet05_Phi[0]) ;
-
-      float jet1px = Jet05_PT[1]*cos(Jet05_Phi[1]) ;
-      float jet1py = Jet05_PT[1]*sin(Jet05_Phi[1]) ;
-
-      float Pperpx = 0.5 * ( jet0px - jet1px ) * Pperp_random_sign ;
-      float Pperpy = 0.5 * ( jet0py - jet1py ) * Pperp_random_sign ;
-      float Pperp = sqrt( Pperpx*Pperpx + Pperpy*Pperpy ) ;
-
-      float qperpx =       ( jet0px + jet1px ) ;
-      float qperpy =       ( jet0py + jet1py ) ;
-      float qperp = sqrt( qperpx*qperpx + qperpy*qperpy ) ;
-
-      float phi_Pperp = atan2( Pperpy, Pperpx ) ;
-      float phi_qperp = atan2( qperpy, qperpx ) ;
-
-      float dphi_Pperp_qperp = calc_dphi( phi_Pperp, phi_qperp ) ;
-
-      ///if ( qperp/Pperp > 0.3 ) continue ;
-
-
-         int ind_gj0(-1) ;
-         int ind_gj1(-1) ;
-         float gj0dr = 9999999. ;
-         float gj1dr = 9999999. ;
-         for ( int ji=0; ji<GenJet05_; ji++ ) {
-            float dr0 = calc_dR( Jet05_Phi[0], GenJet05_Phi[ji], Jet05_Eta[0], GenJet05_Eta[ji] ) ;
-            if ( dr0 < gj0dr ) {
-               ind_gj0 = ji ;
-               gj0dr = dr0 ;
-            }
-            float dr1 = calc_dR( Jet05_Phi[1], GenJet05_Phi[ji], Jet05_Eta[1], GenJet05_Eta[ji] ) ;
-            if ( dr1 < gj1dr ) {
-               ind_gj1 = ji ;
-               gj1dr = dr1 ;
-            }
-         } // ji
-
-         bool has_2gjm(false) ;
-         if ( ind_gj0>=0 && ind_gj1>=0 && ind_gj0!=ind_gj1 && gj0dr<0.3 && gj1dr<0.3 ) has_2gjm = true ;
-
-
 
 
 
@@ -228,6 +210,9 @@ void event_display1::Loop( bool big_canvas )
     //
     //--- end event selection / reconstruction
 
+
+      text -> SetTextSize(0.05) ;
+      text -> SetTextFont( 62 ) ;
 
 
       printf("\n\n Event %llu,  %d gen particles,  Event_ = %d\n", jentry, Particle_, Event_ ) ;
@@ -266,7 +251,8 @@ void event_display1::Loop( bool big_canvas )
 
       printf("\n\n  Gen jet HT = %.2f   Gen particle HT = %.2f\n\n", genjetht, genparticleht ) ;
 
-      pad1 -> cd() ;
+      //pad1 -> cd() ;
+      can -> cd() ;
 
       hp -> Draw() ;
 
@@ -275,15 +261,17 @@ void event_display1::Loop( bool big_canvas )
          float phi = Particle_Phi[pi] ;
          float pt = Particle_PT[pi] ;
          if ( Particle_Status[pi] == 1 && pt>0.100   ) {
-            float sf = 2*log( 1. + pt ) ;
+            //float sf = 2*log( 1. + pt ) ;
+            float sf = 4*log( 1. + pt ) ;
             marker_fsp -> SetMarkerSize( sf ) ;
             marker_fsp -> DrawMarker( eta, phi ) ;
          }
-         if ( Particle_Status[pi] == 23 ) {
-            marker_gp -> DrawMarker( eta, phi ) ;
-            sprintf( pname, "%s Pt=%4.2f", mcname( Particle_PID[pi] ), Particle_PT[pi] ) ;
-            text -> DrawText( eta+0.1, phi+0.1, pname ) ;
-         }
+     //  if ( Particle_Status[pi] == 23 ) {
+     //     marker_gp -> DrawMarker( eta, phi ) ;
+     //     //sprintf( pname, "%s Pt=%4.2f", mcname( Particle_PID[pi] ), Particle_PT[pi] ) ;
+     //     sprintf( pname, "%s", mcname( Particle_PID[pi] ) ) ;
+     //     text -> DrawText( eta+0.1, phi+0.1, pname ) ;
+     //  }
       } // pi
 
       printf("\n") ;
@@ -293,8 +281,12 @@ void event_display1::Loop( bool big_canvas )
          float pt = Particle_PT[pi] ;
          if ( Particle_Status[pi] == 23 ) {
             marker_gp -> DrawMarker( eta, phi ) ;
-            sprintf( pname, "%s Pt=%4.2f", mcname( Particle_PID[pi] ), Particle_PT[pi] ) ;
-            text -> DrawText( eta+0.1, phi+0.1, pname ) ;
+            //sprintf( pname, "%s Pt=%4.2f", mcname( Particle_PID[pi] ), Particle_PT[pi] ) ;
+            sprintf( pname, "%s", mcname( Particle_PID[pi] ) ) ;
+
+            text -> DrawText( eta+0.8, phi+0.2, pname ) ;
+            //text -> DrawText( eta+0.3, phi+0.2, pname ) ;
+
             printf("  parton %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", pi, pt, eta, phi ) ;
          }
       } // pi
@@ -337,158 +329,143 @@ void event_display1::Loop( bool big_canvas )
 ////     printf("  RecJet10 %2d :  Pt = %6.2f   Eta = %7.2f  Phi = %7.2f\n", ji, pt, eta, phi ) ;
 ////  } // ji
 
-      pad1 -> Update() ;
-      pad1 -> Draw() ;
+      //pad1 -> Update() ;
+      //pad1 -> Draw() ;
+
+
+      text -> SetTextAlign( 22 ) ;
+      text -> SetTextSize( 0.070 ) ;
+      sprintf( label, "x1 = %.3f ,   x2 = %.3f", Event_X1[0], Event_X2[0] ) ;
+      text->DrawTextNDC( 0.50, 0.97, label ) ;
+
+      gPad->Update() ;
+      gPad->Draw() ;
+      can -> Update() ;
+      can -> Draw() ;
+
+      can -> SaveAs( "event.pdf" ) ;
+
+
+/// //------------
+
+
+///   can -> cd() ;
+///   TPad* pad2 = new TPad("pad2","", 0.02, 0.02,  0.48, 0.48 ) ;
+///   pad2->Draw() ;
+///   pad2->cd() ;
+
+///   hp2 -> Draw() ;
+///   gPad -> SetGridx(1) ;
+///   gPad -> SetGridy(1) ;
+
+///   circle_border -> DrawEllipse( 0, 0, 8., 8., 0., 360., 0. ) ;
+
+///   for ( int pi=0; pi<Particle_; pi++ ) {
+///      if ( Particle_Status[pi] != 23 ) continue ;
+///      float eta = Particle_Eta[pi] ;
+///      float phi = Particle_Phi[pi] ;
+///      float pt = Particle_PT[pi] ;
+///      float px = pt * cos( phi ) ;
+///      float py = pt * sin( phi ) ;
+///      arrow -> SetLineWidth(3) ;
+///      arrow -> SetLineColor( 4 ) ;
+///      arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
+///   } // pi
+
+///   for ( int ji=0; ji<GenJet05_; ji++ ) {
+///      float eta = GenJet05_Eta[ji] ;
+///      float phi = GenJet05_Phi[ji] ;
+///      float pt  = GenJet05_PT[ji] ;
+///      float px = pt * cos( phi ) ;
+///      float py = pt * sin( phi ) ;
+///      arrow -> SetLineWidth(3) ;
+///      arrow -> SetLineColor( 3 ) ;
+///      arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
+///   } // ji
+
+///   for ( int ji=0; ji<Jet05_; ji++ ) {
+///      float eta = Jet05_Eta[ji] ;
+///      float phi = Jet05_Phi[ji] ;
+///      float pt  = Jet05_PT[ji] ;
+///      float px = pt * cos( phi ) ;
+///      float py = pt * sin( phi ) ;
+///      arrow -> SetLineWidth(6) ;
+///      arrow -> SetLineColor( 2 ) ;
+///      arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
+///   } // ji
 
 
 
-    //------------
+///   float Pperp_random_sign = 1. ;
+///   if ( gRandom -> Integer(2) == 1 ) Pperp_random_sign = -1. ;
+
+///   float jet0px = Jet05_PT[0]*cos(Jet05_Phi[0]) ;
+///   float jet0py = Jet05_PT[0]*sin(Jet05_Phi[0]) ;
+
+///   float jet1px = Jet05_PT[1]*cos(Jet05_Phi[1]) ;
+///   float jet1py = Jet05_PT[1]*sin(Jet05_Phi[1]) ;
+
+///   float Pperpx = 0.5 * ( jet0px - jet1px ) * Pperp_random_sign ;
+///   float Pperpy = 0.5 * ( jet0py - jet1py ) * Pperp_random_sign ;
+///   float Pperp = sqrt( Pperpx*Pperpx + Pperpy*Pperpy ) ;
+
+///   float qperpx =       ( jet0px + jet1px ) ;
+///   float qperpy =       ( jet0py + jet1py ) ;
+///   float qperp = sqrt( qperpx*qperpx + qperpy*qperpy ) ;
+
+///   float phi_Pperp = atan2( Pperpy, Pperpx ) ;
+///   float phi_qperp = atan2( qperpy, qperpx ) ;
+
+///   float dphi_Pperp_qperp = calc_dphi( phi_Pperp, phi_qperp ) ;
+
+///// arrow -> SetLineWidth(6) ;
+///// arrow -> SetLineColor( 1 ) ;
+///// arrow -> DrawArrow( 0., 0.,  Pperpx, Pperpy, 0.02 ) ;
+
+///// arrow -> SetLineWidth(6) ;
+///// arrow -> SetLineColor( 6 ) ;
+///// arrow -> DrawArrow( 0., 0.,  qperpx, qperpy, 0.02 ) ;
 
 
-      can -> cd() ;
-      TPad* pad2 = new TPad("pad2","", 0.02, 0.02,  0.48, 0.48 ) ;
-      pad2->Draw() ;
-      pad2->cd() ;
-
-      hp2 -> Draw() ;
-      gPad -> SetGridx(1) ;
-      gPad -> SetGridy(1) ;
-
-      circle_border -> DrawEllipse( 0, 0, 8., 8., 0., 360., 0. ) ;
-
-      for ( int pi=0; pi<Particle_; pi++ ) {
-         if ( Particle_Status[pi] != 23 ) continue ;
-         float eta = Particle_Eta[pi] ;
-         float phi = Particle_Phi[pi] ;
-         float pt = Particle_PT[pi] ;
-         float px = pt * cos( phi ) ;
-         float py = pt * sin( phi ) ;
-     //  arrow -> SetLineWidth(3) ;
-     //  arrow -> SetLineColor( 4 ) ;
-     //  arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
-      } // pi
-
-      for ( int ji=0; ji<GenJet05_; ji++ ) {
-         float eta = GenJet05_Eta[ji] ;
-         float phi = GenJet05_Phi[ji] ;
-         float pt  = GenJet05_PT[ji] ;
-         float px = pt * cos( phi ) ;
-         float py = pt * sin( phi ) ;
-         if ( eta > 2.4 ) {
-            arrow -> SetLineWidth(3) ;
-            arrow -> SetLineColor( 3 ) ;
-            arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
-         }
-      } // ji
-
-      for ( int ji=0; ji<Jet05_; ji++ ) {
-         float eta = Jet05_Eta[ji] ;
-         float phi = Jet05_Phi[ji] ;
-         float pt  = Jet05_PT[ji] ;
-         float px = pt * cos( phi ) ;
-         float py = pt * sin( phi ) ;
-         arrow -> SetLineWidth(6) ;
-         arrow -> SetLineColor( 2 ) ;
-         arrow -> DrawArrow( 0., 0., px, py, 0.02 ) ;
-      } // ji
+///   pad2 -> Update() ;
+///   pad2 -> Draw() ;
 
 
+/// //------------
 
 
-      arrow -> SetLineWidth(6) ;
-      arrow -> SetLineColor( 1 ) ;
-      arrow -> DrawArrow( 0., 0.,  Pperpx, Pperpy, 0.02, ">" ) ;
+///   can -> cd() ;
+///   TPad* pad3 = new TPad("pad3","", 0.52, 0.02,  0.98, 0.48 ) ;
+///   pad3->Draw() ;
+///   pad3->cd() ;
 
-      arrow -> SetLineWidth(6) ;
-      arrow -> SetLineColor( 6 ) ;
-      arrow -> DrawArrow( 0., 0.,  qperpx, qperpy, 0.02, ">" ) ;
+///   float ty = 0.9 ;
+///   float dty = 0.05 ;
 
+///   char line_text[100] ;
 
-         if ( has_2gjm ) {
-                  float genjet0px = GenJet05_PT[ind_gj0]*cos(GenJet05_Phi[ind_gj0]) ;
-                  float genjet0py = GenJet05_PT[ind_gj0]*sin(GenJet05_Phi[ind_gj0]) ;
-                  float genjet0theta = theta_from_eta( GenJet05_Eta[ind_gj0] ) ;
-                  float genjet0pz = GenJet05_PT[ind_gj0] / tan(genjet0theta) ;
+///   sprintf( line_text, "Event %lld", jentry ) ;
+///   textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
+///   ty = ty - dty ;
 
-                  float genjet1px = GenJet05_PT[ind_gj1]*cos(GenJet05_Phi[ind_gj1]) ;
-                  float genjet1py = GenJet05_PT[ind_gj1]*sin(GenJet05_Phi[ind_gj1]) ;
-                  float genjet1theta = theta_from_eta( GenJet05_Eta[ind_gj1] ) ;
-                  float genjet1pz = GenJet05_PT[ind_gj1] / tan(genjet0theta) ;
+///   sprintf( line_text, "x1 = %6.4f, %s", Event_X1[0], mcname( Particle_PID[4] ) ) ;
+///   textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
+///   ty = ty - dty ;
 
-                  float genPperpx = 0.5 * ( genjet0px - genjet1px ) * Pperp_random_sign ;
-                  float genPperpy = 0.5 * ( genjet0py - genjet1py ) * Pperp_random_sign ;
-                  float genPperp = sqrt( genPperpx*genPperpx + genPperpy*genPperpy ) ;
+///   sprintf( line_text, "x2 = %6.4f, %s", Event_X2[0], mcname( Particle_PID[5] ) ) ;
+///   textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
+///   ty = ty - dty ;
 
-                  float genqperpx =       ( genjet0px + genjet1px ) ;
-                  float genqperpy =       ( genjet0py + genjet1py ) ;
-                  float genqperp = sqrt( genqperpx*genqperpx + genqperpy*genqperpy ) ;
-
-                  float phi_genPperp = atan2( genPperpy, genPperpx ) ;
-                  float phi_genqperp = atan2( genqperpy, genqperpx ) ;
-
-                  float dphi_genPperp_genqperp = calc_dphi( phi_genPperp, phi_genqperp ) ;
-
-             arrow -> SetLineStyle( 3 ) ;
-
-             arrow -> SetLineWidth(6) ;
-             arrow -> SetLineColor( 1 ) ;
-             arrow -> DrawArrow( 0., 0.,  genPperpx, genPperpy, 0.02, ">" ) ;
-
-             arrow -> SetLineWidth(6) ;
-             arrow -> SetLineColor( 6 ) ;
-             arrow -> DrawArrow( 0., 0.,  genqperpx, genqperpy, 0.02, ">" ) ;
-
-             arrow -> SetLineStyle( 1 ) ;
-
-      printf("\n\n") ;
-      printf("   qperp :  rec = %6.2f,   gen = %6.2f\n",  qperp, genqperp ) ;
-      printf("   Pperp :  rec = %6.2f,   gen = %6.2f\n",  Pperp, genPperp ) ;
-      printf("   dphiqp : rec = %6.3f    gen = %6.3f\n", dphi_Pperp_qperp, dphi_genPperp_genqperp ) ;
-      printf("   q/P :    rec = %6.2f,   gen = %6.2f\n", qperp/Pperp, genqperp/genPperp ) ;
-      printf("\n\n") ;
-
-         }
-
-      pad2 -> Update() ;
-      pad2 -> Draw() ;
+///   sprintf( line_text, "Pperp = %6.2f    qperp = %6.2f", Pperp, qperp ) ;
+///   textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
+///   ty = ty - dty ;
 
 
-    //------------
+///   pad3 -> Update() ;
+///   pad3 -> Draw() ;
 
-
-      can -> cd() ;
-      TPad* pad3 = new TPad("pad3","", 0.52, 0.02,  0.98, 0.48 ) ;
-      pad3->Draw() ;
-      pad3->cd() ;
-
-      float ty = 0.9 ;
-      float dty = 0.05 ;
-
-      char line_text[100] ;
-
-      sprintf( line_text, "Event %lld", jentry ) ;
-      textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
-      ty = ty - dty ;
-
-      sprintf( line_text, "x1 = %6.4f, %s", Event_X1[0], mcname( Particle_PID[4] ) ) ;
-      textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
-      ty = ty - dty ;
-
-      sprintf( line_text, "x2 = %6.4f, %s", Event_X2[0], mcname( Particle_PID[5] ) ) ;
-      textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
-      ty = ty - dty ;
-
-      sprintf( line_text, "Pperp = %6.2f    qperp = %6.2f", Pperp, qperp ) ;
-      textp3 -> DrawTextNDC( 0.1, ty, line_text ) ;
-      ty = ty - dty ;
-
-
-      pad3 -> Update() ;
-      pad3 -> Draw() ;
-
-      //printf("\n\n Jet05_Constituents length for first jet:  %d\n\n", Jet05_Constituents[0].GetEntries() ) ;
-      //printf("\n\n Jet05_Constituents pointer to first constituent:  %p\n\n", Jet05_Constituents[0].At(0) ) ;
-
+///   //printf("\n\n Jet05_Constituents length for first jet:  %d\n\n", Jet05_Constituents[0].GetEntries() ) ;
+///   //printf("\n\n Jet05_Constituents pointer to first constituent:  %p\n\n", Jet05_Constituents[0].At(0) ) ;
 
 
 

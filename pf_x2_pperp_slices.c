@@ -25,13 +25,13 @@
       TH2F* hp2dpm = get_hist2d( "h_log10x2_vs_pt1_sel2_pm" ) ;
 
 
-      TH1F* hp1lx = get_hist( "h_log10x2_Pperp_30to35" ) ;
-      TH1F* hp2lx = get_hist( "h_log10x2_Pperp_35to40" ) ;
-      TH1F* hp3lx = get_hist( "h_log10x2_Pperp_40" )     ;
+      TH1F* hp1lx = get_hist( "h_log10x2_Pperp_35to40" ) ;
+      TH1F* hp2lx = get_hist( "h_log10x2_Pperp_40" ) ;
+      TH1F* hp3lx = get_hist( "h_log10x2_Pperp_45" )     ;
 
-      TH1F* hp1lxpm = get_hist( "h_log10x2_Pperp_30to35_pm" ) ;
-      TH1F* hp2lxpm = get_hist( "h_log10x2_Pperp_35to40_pm" ) ;
-      TH1F* hp3lxpm = get_hist( "h_log10x2_Pperp_40_pm" )     ;
+      TH1F* hp1lxpm = get_hist( "h_log10x2_Pperp_35to40_pm" ) ;
+      TH1F* hp2lxpm = get_hist( "h_log10x2_Pperp_40_pm" ) ;
+      TH1F* hp3lxpm = get_hist( "h_log10x2_Pperp_45_pm" )     ;
 
       TH1F* hp1 = convert_log10_to_linear_1d( hp1lx ) ;
       TH1F* hp2 = convert_log10_to_linear_1d( hp2lx ) ;
@@ -83,9 +83,9 @@
       hp1pm -> Draw("same") ;
       gPad -> SetLogx(1) ;
 
-      tt -> DrawLatexNDC( 0.90, 0.92, "P_{#perp}   from 3.0 to 3.5 GeV" ) ;
+      tt -> DrawLatexNDC( 0.90, 0.92, "P_{#perp}   from 3.5 to 4.0 GeV" ) ;
 
-      can1 -> SaveAs( "plots/pf_x2_pperp_30to35.pdf" ) ;
+      can1 -> SaveAs( "plots/pf_x2_pperp_35to40.pdf" ) ;
 
     //---------------
 
@@ -99,25 +99,25 @@
       hp2pm -> Draw("same") ;
       gPad -> SetLogx(1) ;
 
-      tt -> DrawLatexNDC( 0.90, 0.92, "P_{#perp}   from 3.5 to 4.0 GeV" ) ;
+      tt -> DrawLatexNDC( 0.90, 0.92, "P_{#perp}   greater than 4.0 GeV" ) ;
 
-      can2 -> SaveAs( "plots/pf_x2_pperp_35to40.pdf" ) ;
+      can2 -> SaveAs( "plots/pf_x2_pperp_40.pdf" ) ;
 
     //---------------
 
-      TCanvas* can3 = get_canvas( "can3", "", 1150, 150, 900, 900 ) ;
-      can3 -> cd() ;
-      can3 -> Clear() ;
+///   TCanvas* can3 = get_canvas( "can3", "", 1150, 150, 900, 900 ) ;
+///   can3 -> cd() ;
+///   can3 -> Clear() ;
 
-      hp3 -> Draw() ;
-      hp3 -> Draw("same hist") ;
-      hp3pm -> Draw("same hist") ;
-      hp3pm -> Draw("same") ;
-      gPad -> SetLogx(1) ;
+///   hp3 -> Draw() ;
+///   hp3 -> Draw("same hist") ;
+///   hp3pm -> Draw("same hist") ;
+///   hp3pm -> Draw("same") ;
+///   gPad -> SetLogx(1) ;
 
-      tt -> DrawLatexNDC( 0.90, 0.92, "P_{#perp}   greater than 4.0 GeV" ) ;
+///   tt -> DrawLatexNDC( 0.90, 0.92, "P_{#perp}   greater than 4.0 GeV" ) ;
 
-      can3 -> SaveAs( "plots/pf_x2_pperp_40.pdf" ) ;
+///   can3 -> SaveAs( "plots/pf_x2_pperp_40.pdf" ) ;
 
     //---------------
 

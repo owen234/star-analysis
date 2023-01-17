@@ -12,7 +12,7 @@
       gStyle -> SetPadBottomMargin(0.15) ;
       gStyle -> SetPadTopMargin(0.10) ;
       gStyle -> SetPadLeftMargin(0.15) ;
-      gStyle -> SetPadRightMargin(0.15) ;
+      gStyle -> SetPadRightMargin(0.17) ;
 
       gDirectory -> Delete( "h*" ) ;
 
@@ -21,11 +21,17 @@
 
       TH2F* hp2d = get_hist2d( "h_r2j_qperp_over_Pperp_rec_vs_gen" ) ;
 
-      hp2d -> SetXTitle( "qperp/Pperp, gen jets" ) ;
-      hp2d -> SetYTitle( "qperp/Pperp, reconstructed jets" ) ;
+      hp2d -> SetXTitle( "q_{#perp}   /P_{#perp}   , gen jets" ) ;
+      hp2d -> SetYTitle( "q_{#perp}   /P_{#perp}   , reconstructed jets" ) ;
 
-      hp2d -> SetTitleOffset( 1.4, "x" ) ;
+      hp2d -> SetTitleOffset( 1.2, "x" ) ;
       hp2d -> SetTitleOffset( 1.4, "y" ) ;
+
+      hp2d -> SetTitleSize( 0.055, "x" ) ;
+      hp2d -> SetTitleSize( 0.055, "y" ) ;
+      hp2d -> SetLabelSize( 0.050, "x" ) ;
+      hp2d -> SetLabelSize( 0.050, "y" ) ;
+
 
 
 
@@ -46,11 +52,13 @@
       hp -> SetLineWidth(3) ;
 
 
-      hp -> SetXTitle( "qperp/Pperp, reconstructed jets" ) ;
+      hp -> SetXTitle( "q_{#perp}   /P_{#perp}   , reconstructed jets" ) ;
       hp -> SetYTitle( "Events" ) ;
 
-      hp -> SetTitleOffset( 1.4, "x" ) ;
-      hp -> SetTitleOffset( 1.6, "y" ) ;
+      hp -> SetTitleSize( 0.055, "x" ) ;
+      hp -> SetTitleSize( 0.055, "y" ) ;
+      hp -> SetTitleOffset( 1.2, "x" ) ;
+      hp -> SetTitleOffset( 1.3, "y" ) ;
 
       TCanvas* can2 = get_canvas( "can2", "", 950, 50, 900, 900 ) ;
       can2 -> cd() ;
@@ -59,7 +67,7 @@
       hp -> Draw("hist") ;
       hp -> Draw("same") ;
 
-      can1 -> SaveAs( "plots/pf_qoverp_rec.pdf" ) ;
+      can2 -> SaveAs( "plots/pf_qoverp_rec.pdf" ) ;
 
 
 

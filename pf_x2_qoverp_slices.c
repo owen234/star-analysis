@@ -2,7 +2,7 @@
 #include "histio.c"
 #include "utils.c"
 
-   void pf_x2_pt1slices( const char* infile = "ca4-output/all.root" ) {
+   void pf_x2_qoverp_slices( const char* infile = "ca4-output/all.root" ) {
 
       gStyle -> SetOptStat(0) ;
       gStyle -> SetOptTitle(0) ;
@@ -21,17 +21,17 @@
 
       loadHist( infile ) ;
 
-      TH2F* hp2d = get_hist2d( "h_log10x2_vs_pt1_sel2" ) ;
-      TH2F* hp2dpm = get_hist2d( "h_log10x2_vs_pt1_sel2_pm" ) ;
+      TH2F* hp2d = get_hist2d( "h_log10x2_vs_qoverp_sel2" ) ;
+      TH2F* hp2dpm = get_hist2d( "h_log10x2_vs_qoverp_sel2_pm" ) ;
 
 
-      TH1D* hp1lx = hp2d -> ProjectionY("hp1lx",31,35) ;
-      TH1D* hp2lx = hp2d -> ProjectionY("hp2lx",36,39) ;
-      TH1D* hp3lx = hp2d -> ProjectionY("hp3lx",41,60) ;
+      TH1D* hp1lx = hp2d -> ProjectionY("hp1lx",1,6) ;
+      TH1D* hp2lx = hp2d -> ProjectionY("hp2lx",7,16) ;
+      TH1D* hp3lx = hp2d -> ProjectionY("hp3lx",17,60) ;
 
-      TH1D* hp1lxpm = hp2dpm -> ProjectionY("hp1lxpm",31,35) ;
-      TH1D* hp2lxpm = hp2dpm -> ProjectionY("hp2lxpm",36,39) ;
-      TH1D* hp3lxpm = hp2dpm -> ProjectionY("hp3lxpm",41,60) ;
+      TH1D* hp1lxpm = hp2dpm -> ProjectionY("hp1lxpm",1,6) ;
+      TH1D* hp2lxpm = hp2dpm -> ProjectionY("hp2lxpm",7,16) ;
+      TH1D* hp3lxpm = hp2dpm -> ProjectionY("hp3lxpm",17,60) ;
 
       TH1F* hp1 = convert_log10_to_linear_1d( hp1lx ) ;
       TH1F* hp2 = convert_log10_to_linear_1d( hp2lx ) ;
@@ -50,25 +50,42 @@
       hp2pm -> SetLineStyle(2) ;
       hp3pm -> SetLineStyle(2) ;
 
-      hp1 -> SetXTitle( "x2" ) ;
-      hp2 -> SetXTitle( "x2" ) ;
-      hp3 -> SetXTitle( "x2" ) ;
+      hp1 -> SetXTitle( "x_{2}" ) ;
+      hp2 -> SetXTitle( "x_{2}" ) ;
+      hp3 -> SetXTitle( "x_{2}" ) ;
       hp1 -> SetYTitle( "Events" ) ;
       hp2 -> SetYTitle( "Events" ) ;
       hp3 -> SetYTitle( "Events" ) ;
 
-      hp1 -> SetTitleOffset( 1.5, "x" ) ;
-      hp2 -> SetTitleOffset( 1.5, "x" ) ;
-      hp3 -> SetTitleOffset( 1.5, "x" ) ;
+      hp1 -> SetTitleSize( 0.06, "x" ) ;
+      hp2 -> SetTitleSize( 0.06, "x" ) ;
+      hp3 -> SetTitleSize( 0.06, "x" ) ;
+      hp1 -> SetTitleSize( 0.06, "y" ) ;
+      hp2 -> SetTitleSize( 0.06, "y" ) ;
+      hp3 -> SetTitleSize( 0.06, "y" ) ;
 
-      hp1 -> SetTitleOffset( 1.7, "y" ) ;
-      hp2 -> SetTitleOffset( 1.7, "y" ) ;
-      hp3 -> SetTitleOffset( 1.9, "y" ) ;
+      hp1 -> SetTitleOffset( 1.1, "x" ) ;
+      hp2 -> SetTitleOffset( 1.1, "x" ) ;
+      hp3 -> SetTitleOffset( 1.1, "x" ) ;
 
-      TText* tt = new TText() ;
+      hp1 -> SetTitleOffset( 1.2, "y" ) ;
+      hp2 -> SetTitleOffset( 1.2, "y" ) ;
+      hp3 -> SetTitleOffset( 1.2, "y" ) ;
+
+      hp1 -> SetLabelSize( 0.05, "x" ) ;
+      hp2 -> SetLabelSize( 0.05, "x" ) ;
+      hp3 -> SetLabelSize( 0.05, "x" ) ;
+      hp1 -> SetLabelSize( 0.05, "y" ) ;
+      hp2 -> SetLabelSize( 0.05, "y" ) ;
+      hp3 -> SetLabelSize( 0.05, "y" ) ;
+
+      TLatex* tt = new TLatex() ;
       tt -> SetTextFont( 42 ) ;
-      tt -> SetTextSize( 0.04 ) ;
+      tt -> SetTextSize( 0.06 ) ;
       tt -> SetTextAlign(31) ;
+
+      float lx = 0.90 ;
+      float ly = 0.94 ;
 
     //---------------
 
@@ -82,9 +99,9 @@
       hp1pm -> Draw("same") ;
       gPad -> SetLogx(1) ;
 
-      tt -> DrawTextNDC( 0.90, 0.92, "Lower p_{T} jet p_{T} from 3.0 to 3.5 GeV" ) ;
+      tt -> DrawLatexNDC( lx, ly, "q_{#perp}   /P_{#perp}    less than 0.3" ) ;
 
-      can1 -> SaveAs( "plots/pf_x2_jet1pt_30to35.pdf" ) ;
+      can1 -> SaveAs( "plots/pf_x2_qoverp_lt_03.pdf" ) ;
 
     //---------------
 
@@ -98,9 +115,9 @@
       hp2pm -> Draw("same") ;
       gPad -> SetLogx(1) ;
 
-      tt -> DrawTextNDC( 0.90, 0.92, "Lower p_{T} jet p_{T} from 3.5 to 4.0 GeV" ) ;
+      tt -> DrawLatexNDC( lx, ly, "q_{#perp}   /P_{#perp}    from 0.3 to 0.8" ) ;
 
-      can2 -> SaveAs( "plots/pf_x2_jet1pt_35to40.pdf" ) ;
+      can2 -> SaveAs( "plots/pf_x2_qoverp_03to08.pdf" ) ;
 
     //---------------
 
@@ -114,9 +131,9 @@
       hp3pm -> Draw("same") ;
       gPad -> SetLogx(1) ;
 
-      tt -> DrawTextNDC( 0.90, 0.92, "Lower p_{T} jet p_{T} greater than 4.0 GeV" ) ;
+      tt -> DrawLatexNDC( lx, ly, "q_{#perp}   /P_{#perp}    greater than 0.8" ) ;
 
-      can3 -> SaveAs( "plots/pf_x2_jet1pt_40.pdf" ) ;
+      can3 -> SaveAs( "plots/pf_x2_qoverp_gt_08.pdf" ) ;
 
     //---------------
 

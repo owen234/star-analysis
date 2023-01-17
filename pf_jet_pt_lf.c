@@ -96,7 +96,7 @@
       can2 -> cd() ;
       can2 -> Clear() ;
 
-      hp1db -> SetMaximum( 95*(hp1db->GetMaximum())) ;
+      hp1db -> SetMaximum( 1095*(hp1db->GetMaximum())) ;
 
       hp1da -> Draw() ;
       gPad->Update() ;

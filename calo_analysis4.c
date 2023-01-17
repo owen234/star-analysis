@@ -495,6 +495,8 @@ void calo_analysis4::Loop( bool verbose ) {
    TH2F* h_jet1pt_vs_jet0pt_sel3 = new TH2F( "h_jet1pt_vs_jet0pt_sel3", "jet1pt vs jet0pt, sel3", 40, 0., 8., 40, 0., 8. ) ;
    TH2F* h_jet1pt_vs_jet0pt_sel3_pm = new TH2F( "h_jet1pt_vs_jet0pt_sel3_pm", "jet1pt vs jet0pt, sel3, parton matched", 40, 0., 8., 40, 0., 8. ) ;
 
+   TH2F* h_jet1pt_vs_jet0pt_sel3_v2 = new TH2F( "h_jet1pt_vs_jet0pt_sel3_v2", "jet1pt vs jet0pt, sel3", 50, 0., 10., 50, 0., 10. ) ;
+
 
    TH2F* h_jet1eta_vs_jet0eta_sel0 = new TH2F( "h_jet1eta_vs_jet0eta_sel0", "jet1eta vs jet0eta, sel0",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
    TH2F* h_jet1eta_vs_jet0eta_sel1 = new TH2F( "h_jet1eta_vs_jet0eta_sel1", "jet1eta vs jet0eta, sel1",   36, 2.4, 4.2, 36, 2.4, 4.2  ) ;
@@ -581,9 +583,13 @@ void calo_analysis4::Loop( bool verbose ) {
    TH2F* h_log10x2_vs_qperp_Pperp45_sel3 = new TH2F( "h_log10x2_vs_qperp_Pperp45_sel3", "log10 x2 vs qperp, 4.5<Pperp, sel3", 60, 0., 6., 60, -4., 1. ) ;
 
    TH2F* h_log10x2_vs_qoverp_sel2 = new TH2F( "h_log10x2_vs_qoverp_sel2", "log10 x2 vs qperp/Pperp, sel2", 60, 0., 3., 60, -4., 1. ) ;
+   TH2F* h_log10x2_vs_qoverp_sel2_pm = new TH2F( "h_log10x2_vs_qoverp_sel2_pm", "log10 x2 vs qperp/Pperp, sel2, parton matched", 60, 0., 3., 60, -4., 1. ) ;
 
    TH2F* h_log10x2_vs_pt1_sel2 = new TH2F( "h_log10x2_vs_pt1_sel2", "log10 x2 vs jet1 pt, sel2", 60, 0., 6., 60, -4., 1. ) ;
    TH2F* h_log10x2_vs_pt1_sel2_pm = new TH2F( "h_log10x2_vs_pt1_sel2_pm", "log10 x2 vs jet1 pt, sel2, parton matched", 60, 0., 6., 60, -4., 1. ) ;
+
+   TH2F* h_log10x2_vs_pt0_sel2 = new TH2F( "h_log10x2_vs_pt0_sel2", "log10 x2 vs jet0 pt, sel2", 100, 0., 10., 60, -4., 1. ) ;
+   TH2F* h_log10x2_vs_pt0_sel2_pm = new TH2F( "h_log10x2_vs_pt0_sel2_pm", "log10 x2 vs jet0 pt, sel2, parton matched", 100, 0., 10., 60, -4., 1. ) ;
 
    TH2F* h_log10x2_vs_qperp_pt1gt4_sel2 = new TH2F( "h_log10x2_vs_qperp_pt1gt4_sel2", "log10 x2 vs qperp, jet pt1 > 4 sel2", 60, 0., 6., 60, -4., 1. ) ;
 
@@ -591,10 +597,14 @@ void calo_analysis4::Loop( bool verbose ) {
    TH1F* h_log10x2_Pperp_30to35 = new TH1F( "h_log10x2_Pperp_30to35", "log10 x2, 3.0 < Pperp < 3.5", 60, -4., 1. ) ;
    TH1F* h_log10x2_Pperp_35to40 = new TH1F( "h_log10x2_Pperp_35to40", "log10 x2, 3.5 < Pperp < 4.0", 60, -4., 1. ) ;
    TH1F* h_log10x2_Pperp_40     = new TH1F( "h_log10x2_Pperp_40",     "log10 x2, Pperp > 4.0"      , 60, -4., 1. ) ;
+   TH1F* h_log10x2_Pperp_40to45 = new TH1F( "h_log10x2_Pperp_40to45", "log10 x2, 4.0 < Pperp < 4.5", 60, -4., 1. ) ;
+   TH1F* h_log10x2_Pperp_45     = new TH1F( "h_log10x2_Pperp_45",     "log10 x2, Pperp > 4.5"      , 60, -4., 1. ) ;
 
    TH1F* h_log10x2_Pperp_30to35_pm = new TH1F( "h_log10x2_Pperp_30to35_pm", "log10 x2, 3.0 < Pperp < 3.5, parton matched", 60, -4., 1. ) ;
    TH1F* h_log10x2_Pperp_35to40_pm = new TH1F( "h_log10x2_Pperp_35to40_pm", "log10 x2, 3.5 < Pperp < 4.0, parton matched", 60, -4., 1. ) ;
    TH1F* h_log10x2_Pperp_40_pm     = new TH1F( "h_log10x2_Pperp_40_pm",     "log10 x2, Pperp > 4.0, parton matched"      , 60, -4., 1. ) ;
+   TH1F* h_log10x2_Pperp_40to45_pm = new TH1F( "h_log10x2_Pperp_40to45_pm", "log10 x2, 4.0 < Pperp < 4.5, parton matched", 60, -4., 1. ) ;
+   TH1F* h_log10x2_Pperp_45_pm     = new TH1F( "h_log10x2_Pperp_45_pm",     "log10 x2, Pperp > 4.5, parton matched"      , 60, -4., 1. ) ;
 
 
    TH2F* h_cos2phiqp_vs_qperp_tightdphi = new TH2F( "h_cos2phiqp_vs_qperp_tightdphi", "cos(2phiqp) vs qperp, tightdphi", 60, 0., 3., 60, -1.1, 1.1 ) ;
@@ -639,6 +649,22 @@ void calo_analysis4::Loop( bool verbose ) {
 
    TH1F* h_dphiqp_rec_minus_true_qoplt03_jpt040_rewrap = new TH1F( "h_dphiqp_rec_minus_true_qoplt03_jpt040_rewrap", "delta phi(qperp, Pperp), q/P<0.3, jet0pt>4",
                60, -3.2, 3.2 ) ;
+
+
+   TH2F* h_dphiqp_vs_qperp = new TH2F( "h_dphiqp_vs_qperp", "delta phi(qperp, Pperp) vs qperp", 60, 0., 8., 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_vs_qoverp = new TH2F( "h_dphiqp_vs_qoverp", "delta phi(qperp, Pperp) vs qoverp", 60, 0., 2., 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_vs_qoverp_pm = new TH2F( "h_dphiqp_vs_qoverp_pm", "delta phi(qperp, Pperp) vs qoverp, parton matched", 60, 0., 2., 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphiqp_vs_qperp_gen = new TH2F( "h_dphiqp_vs_qperp_gen", "delta phi(qperp, Pperp) vs qperp, gen vars", 60, 0., 8., 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_vs_qoverp_gen = new TH2F( "h_dphiqp_vs_qoverp_gen", "delta phi(qperp, Pperp) vs qoverp, gen vars", 60, 0., 2., 60, -3.2, 3.2 ) ;
+   TH2F* h_dphiqp_vs_qoverp_gen_pm = new TH2F( "h_dphiqp_vs_qoverp_gen_pm", "delta phi(qperp, Pperp) vs qoverp, gen vars, parton matched", 60, 0., 2., 60, -3.2, 3.2 ) ;
+
+   TH2F* h_dphiqp_rec_vs_gen = new TH2F( "h_dphiqp_rec_vs_gen", "delta phi(qperp, Pperp), rec vs gen, all", 60, -3.2, 3.2, 60, -3.2, 3.2 ) ;
+
+
+   TH1F* h_dphijj_rec = new TH1F( "h_dphijj_rec", "delta phi(jj), rec", 16, 3.14159265/2., 3*3.14159265/2. ) ;
+
+
 
    Long64_t nentries = fChain->GetEntries();
 
@@ -1017,7 +1043,9 @@ void calo_analysis4::Loop( bool verbose ) {
 
 
 
-         if ( Jet05_PT[0] > 3.0 && Jet05_PT[1] > 3.0 ) {
+       //-- 2022-11-07 : increase higher pt jet cut to 4.0 while keeping lower one at 3.0.
+       //
+         if ( Jet05_PT[0] > 4.0 && Jet05_PT[1] > 3.0 ) {
 
             h_log10x2_vs_log10x1_sel0 -> Fill( log10(Event_X1[0]), log10(Event_X2[0]), weight ) ;
             h_genparton_etab_vs_etaa_sel0 -> Fill( gpa_eta, gpb_eta, weight ) ;
@@ -1069,9 +1097,13 @@ void calo_analysis4::Loop( bool verbose ) {
                   h_log10x2_vs_qperp_sel2 -> Fill( qperp, log10(Event_X2[0]), weight ) ;
 
                   h_log10x2_vs_qoverp_sel2 -> Fill( qperp/Pperp, log10(Event_X2[0]), weight ) ;
+                  if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_qoverp_sel2_pm -> Fill( qperp/Pperp, log10(Event_X2[0]), weight ) ;
 
                   h_log10x2_vs_pt1_sel2 -> Fill( Jet05_PT[1], log10(Event_X2[0]), weight ) ;
                   if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_pt1_sel2_pm -> Fill( Jet05_PT[1], log10(Event_X2[0]), weight ) ;
+
+                  h_log10x2_vs_pt0_sel2 -> Fill( Jet05_PT[0], log10(Event_X2[0]), weight ) ;
+                  if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_log10x2_vs_pt0_sel2_pm -> Fill( Jet05_PT[0], log10(Event_X2[0]), weight ) ;
 
                   if ( Jet05_PT[1] > 4.0 ) h_log10x2_vs_qperp_pt1gt4_sel2 ->  Fill( qperp, log10(Event_X2[0]), weight ) ;
 
@@ -1085,11 +1117,15 @@ void calo_analysis4::Loop( bool verbose ) {
                   if ( Pperp>3.0 && Pperp<3.5 ) h_log10x2_Pperp_30to35 -> Fill( log10(Event_X2[0]), weight ) ;
                   if ( Pperp>3.5 && Pperp<4.0 ) h_log10x2_Pperp_35to40 -> Fill( log10(Event_X2[0]), weight ) ;
                   if ( Pperp>4.0 ) h_log10x2_Pperp_40 -> Fill( log10(Event_X2[0]), weight ) ;
+                  if ( Pperp>4.0 && Pperp<4.5 ) h_log10x2_Pperp_40to45 -> Fill( log10(Event_X2[0]), weight ) ;
+                  if ( Pperp>4.5 ) h_log10x2_Pperp_45 -> Fill( log10(Event_X2[0]), weight ) ;
 
                   if ( gp0dr < 1.0 && gp1dr < 1.0 ) {
                      if ( Pperp>3.0 && Pperp<3.5 ) h_log10x2_Pperp_30to35_pm -> Fill( log10(Event_X2[0]), weight ) ;
                      if ( Pperp>3.5 && Pperp<4.0 ) h_log10x2_Pperp_35to40_pm -> Fill( log10(Event_X2[0]), weight ) ;
                      if ( Pperp>4.0 ) h_log10x2_Pperp_40_pm -> Fill( log10(Event_X2[0]), weight ) ;
+                     if ( Pperp>4.0 && Pperp<4.5 ) h_log10x2_Pperp_40to45_pm -> Fill( log10(Event_X2[0]), weight ) ;
+                     if ( Pperp>4.5 ) h_log10x2_Pperp_45_pm -> Fill( log10(Event_X2[0]), weight ) ;
                   }
 
                   if ( genjetht < 999999. ) { // 2022-11-04 : drop the activity veto.
@@ -1098,6 +1134,7 @@ void calo_analysis4::Loop( bool verbose ) {
                      h_genparton_etab_vs_etaa_sel3 -> Fill( gpa_eta, gpb_eta, weight ) ;
                      h_genparton_drb_vs_dra_sel3 -> Fill( gpa_dr, gpb_dr, weight ) ;
                      h_jet1pt_vs_jet0pt_sel3 -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
+                     h_jet1pt_vs_jet0pt_sel3_v2 -> Fill( Jet05_PT[0], Jet05_PT[1], weight ) ;
                      h_jet1eta_vs_jet0eta_sel3 -> Fill( Jet05_Eta[0], Jet05_Eta[1], weight ) ;
                      h_r2j_genjetht_sel3 -> Fill( genjetht, weight ) ;
 
@@ -1149,6 +1186,7 @@ void calo_analysis4::Loop( bool verbose ) {
             h_log10x2_vs_Pperp -> Fill( Pperp, log10(Event_X2[0]), weight ) ;
 
 
+            h_dphijj_rec -> Fill( rec_dphi_0to2pi, weight ) ;
 
 
             h_jet0_eta_vs_pt_all -> Fill( Jet05_PT[0], Jet05_Eta[0], weight ) ;
@@ -1461,6 +1499,16 @@ void calo_analysis4::Loop( bool verbose ) {
 
                   if ( qperp/Pperp < 0.3 && Jet05_PT[0]>4.0 ) h_dphiqp_rec_minus_true_qoplt03_jpt040_rewrap -> Fill( dphi_Pperp_qperp_rewrap - dphi_genPperp_genqperp, weight ) ;
 
+                  h_dphiqp_rec_vs_gen -> Fill( dphi_genPperp_genqperp, dphi_Pperp_qperp, weight ) ;
+
+                  h_dphiqp_vs_qperp -> Fill( qperp, dphi_Pperp_qperp, weight ) ;
+                  h_dphiqp_vs_qoverp -> Fill( qperp/Pperp, dphi_Pperp_qperp, weight ) ;
+                  if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_vs_qoverp_pm -> Fill( qperp/Pperp, dphi_Pperp_qperp, weight ) ;
+
+
+                  h_dphiqp_vs_qperp_gen -> Fill( genqperp, dphi_genPperp_genqperp, weight ) ;
+                  h_dphiqp_vs_qoverp_gen -> Fill( genqperp/genPperp, dphi_genPperp_genqperp, weight ) ;
+                  if ( gp0dr < 1.0 && gp1dr < 1.0 ) h_dphiqp_vs_qoverp_gen_pm -> Fill( genqperp/genPperp, dphi_genPperp_genqperp, weight ) ;
 
 
 
