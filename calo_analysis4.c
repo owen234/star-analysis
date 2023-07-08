@@ -666,6 +666,74 @@ void calo_analysis4::Loop( bool verbose ) {
 
 
 
+
+   //--- set up output mini tree
+
+   char output_minitree_file[1000] ;
+   sprintf( output_minitree_file, "ca4-output/mini-tree-%s.root", dset_name ) ;
+   printf("\n\n Creating output minitree file:  %s\n\n", output_minitree_file ) ;
+   TFile* tf_mt_out = new TFile( output_minitree_file, "recreate" ) ;
+
+   TTree* tt_out = new TTree( "minitree", "Mini tree" ) ;
+
+   float evt_weight ;
+   float pthat_min ;
+   float pthat_max ;
+   float evt_x1 ;
+   float evt_x2 ;
+   float evt_xsec ;
+   float evt_pthat ;
+
+   float recj1_pt ;
+   float recj1_eta ;
+   float recj2_pt ;
+   float recj2_eta ;
+   float recjj_dphi ;
+
+   float genj1_pt ;
+   float genj1_eta ;
+   float genj2_pt ;
+   float genj2_eta ;
+   float genjj_dphi ;
+
+   float recPt ;
+   float recqt ;
+   float recphiPq ;
+
+   float genPt ;
+   float genqt ;
+   float genphiPq ;
+
+   tt_out -> Branch( "evt_weight", &evt_weight, "evt_weight/F" ) ;
+   tt_out -> Branch( "pthat_min", &pthat_min, "pthat_min/F" ) ;
+   tt_out -> Branch( "pthat_max", &pthat_max, "pthat_max/F" ) ;
+   tt_out -> Branch( "evt_x1", &evt_x1, "evt_x1/F" ) ;
+   tt_out -> Branch( "evt_x2", &evt_x2, "evt_x2/F" ) ;
+   tt_out -> Branch( "evt_xsec", &evt_xsec, "evt_xsec/F" ) ;
+   tt_out -> Branch( "evt_pthat", &evt_pthat, "evt_pthat/F" ) ;
+
+   tt_out -> Branch( "recj1_pt", &recj1_pt, "recj1_pt/F" ) ;
+   tt_out -> Branch( "recj1_eta", &recj1_eta, "recj1_eta/F" ) ;
+   tt_out -> Branch( "recj2_pt", &recj2_pt, "recj2_pt/F" ) ;
+   tt_out -> Branch( "recj2_eta", &recj2_eta, "recj2_eta/F" ) ;
+   tt_out -> Branch( "recjj_dphi", &recjj_dphi, "recjj_dphi/F" ) ;
+
+   tt_out -> Branch( "genj1_pt", &genj1_pt, "genj1_pt/F" ) ;
+   tt_out -> Branch( "genj1_eta", &genj1_eta, "genj1_eta/F" ) ;
+   tt_out -> Branch( "genj2_pt", &genj2_pt, "genj2_pt/F" ) ;
+   tt_out -> Branch( "genj2_eta", &genj2_eta, "genj2_eta/F" ) ;
+   tt_out -> Branch( "genjj_dphi", &genjj_dphi, "genjj_dphi/F" ) ;
+
+   tt_out -> Branch( "recPt", &recPt, "recPt/F" ) ;
+   tt_out -> Branch( "recqt", &recqt, "recqt/F" ) ;
+   tt_out -> Branch( "recphiPq", &recphiPq, "recphiPq/F" ) ;
+
+   tt_out -> Branch( "genPt", &genPt, "genPt/F" ) ;
+   tt_out -> Branch( "genqt", &genqt, "genqt/F" ) ;
+   tt_out -> Branch( "genphiPq", &genphiPq, "genphiPq/F" ) ;
+
+
+
    Long64_t nentries = fChain->GetEntries();
 
    TStopwatch tsw_loop ;
@@ -686,7 +754,12 @@ void calo_analysis4::Loop( bool verbose ) {
    float weight = dset_pp_weight_per_ipb * 1.3 * 197 * 0.40 ; // 1.3 1/pb of pA, mass number of gold is 197
                                                               //  The factor of 0.4 is for the fraction that's fiducial in the FCS.
 
+   evt_weight = weight ;
 
+   pthat_min = dset_pthatmin ;
+   pthat_max = dset_pthatmax ;
+
+   evt_xsec = dset_total_pp_xsec_mb ;
 
 
    printf("\n\n  Pthat range:  %.1f to %.1f\n\n\n", dset_pthatmin, dset_pthatmax ) ;
@@ -724,6 +797,9 @@ void calo_analysis4::Loop( bool verbose ) {
     //********** cut on pthat for this dataset
 
 
+     evt_x1 = Event_X1[0] ;
+     evt_x2 = Event_X2[0] ;
+     evt_pthat = Particle_PT[4] ;
 
 
      if ( verbose ) {
@@ -1583,6 +1659,29 @@ void calo_analysis4::Loop( bool verbose ) {
                   }
 
 
+                  recj1_pt = Jet05_PT[0] ;
+                  recj1_eta = Jet05_Eta[0] ;
+                  recj2_pt = Jet05_PT[1] ;
+                  recj2_eta = Jet05_Eta[1] ;
+                  recjj_dphi = rec_dphi ;
+
+                  genj1_pt = GenJet05_PT[ind_gj0] ;
+                  genj1_eta = GenJet05_Eta[ind_gj0] ;
+                  genj2_pt = GenJet05_PT[ind_gj1] ;
+                  genj2_eta = GenJet05_Eta[ind_gj1] ;
+                  genjj_dphi = gen_dphi ;
+
+                  recPt = Pperp ;
+                  recqt = qperp ;
+                  recphiPq = dphi_Pperp_qperp ;
+
+                  genPt = genPperp ;
+                  genqt = genqperp ;
+                  genphiPq = dphi_genPperp_genqperp ;
+
+
+
+                  tt_out -> Fill() ;
 
 
 
@@ -1780,6 +1879,11 @@ void calo_analysis4::Loop( bool verbose ) {
 
    } // jentry
    printf("\n\n Done.\n\n") ;
+
+   tt_out -> Write() ;
+   printf("\n\n Closing output minitree file:  %s\n\n", output_minitree_file ) ;
+   tf_mt_out -> Close() ;
+
 
    gSystem -> Exec("mkdir -p ca4-output") ;
 
