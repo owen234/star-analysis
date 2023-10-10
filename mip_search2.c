@@ -330,6 +330,23 @@ void mip_search2::Loop( int max_evts, bool arg_verb )
    vector<float> tt_hcal_iso30 ;
 
 
+   //--- storing a vector of vectors in a TTree requires extra crap that doesn't work.  Do it the dumb way.
+
+   ////////std::vector<vector<int>> tt_ecal_hit_index ; // NFG
+   ////////std::vector<vector<int>> tt_hcal_hit_index ; // NFG
+
+   vector<int> tt_ecal_hit0ind ;
+   vector<int> tt_ecal_hit1ind ;
+
+   vector<int> tt_hcal_hit0ind ;
+   vector<int> tt_hcal_hit1ind ;
+   vector<int> tt_hcal_hit2ind ;
+   vector<int> tt_hcal_hit3ind ;
+   vector<int> tt_hcal_hit4ind ;
+
+   vector<int> tt_trk_index ;
+
+
    TTree* tt_out = new TTree( "mipsearch2", "mipsearch2" ) ;
 
    tt_out -> Branch( "n_ecal_cl", &tt_n_ecal_cl ) ;
@@ -347,8 +364,21 @@ void mip_search2::Loop( int max_evts, bool arg_verb )
    tt_out -> Branch( "hcal_x", &tt_hcal_x ) ;
    tt_out -> Branch( "hcal_y", &tt_hcal_y ) ;
    tt_out -> Branch( "hcal_ecal_cos_angle", &tt_hcal_ecal_cos_angle ) ;
-   tt_out -> Branch( "hcal_iso20", &tt_ecal_iso20 ) ;
-   tt_out -> Branch( "hcal_iso30", &tt_ecal_iso30 ) ;
+   ///////tt_out -> Branch( "hcal_iso20", &tt_ecal_iso20 ) ; // bug found 2023-10-09
+   ///////tt_out -> Branch( "hcal_iso30", &tt_ecal_iso30 ) ; // bug found 2023-10-09
+   tt_out -> Branch( "hcal_iso20", &tt_hcal_iso20 ) ;
+   tt_out -> Branch( "hcal_iso30", &tt_hcal_iso30 ) ;
+
+   tt_out -> Branch( "ecal_hit0ind", &tt_ecal_hit0ind ) ;
+   tt_out -> Branch( "ecal_hit1ind", &tt_ecal_hit1ind ) ;
+
+   tt_out -> Branch( "hcal_hit0ind", &tt_hcal_hit0ind ) ;
+   tt_out -> Branch( "hcal_hit1ind", &tt_hcal_hit1ind ) ;
+   tt_out -> Branch( "hcal_hit2ind", &tt_hcal_hit2ind ) ;
+   tt_out -> Branch( "hcal_hit3ind", &tt_hcal_hit3ind ) ;
+   tt_out -> Branch( "hcal_hit4ind", &tt_hcal_hit4ind ) ;
+
+   tt_out -> Branch( "trk_index", &tt_trk_index ) ;
 
 
 
@@ -487,20 +517,6 @@ void mip_search2::Loop( int max_evts, bool arg_verb )
          float sumE_hcal(0.00000000001) ;
          float sumEx_hcal(0.) ;
          float sumEy_hcal(0.) ;
-   ////  for ( int hi=0; hi<fcs_rec_hcalE->size(); hi++ ) {
-   ////     float energy_hcal = fcs_rec_hcalE->at(hi) ;
-   ////     if ( energy_hcal < 0.01 ) continue ;
-   ////     float x = fcs_rec_hcalX->at(hi) ;
-   ////     float y = fcs_rec_hcalY->at(hi) ;
-   ////     float dx = clusterx - x ;
-   ////     float dy = clustery - y ;
-   ////     float dr = sqrt( dx*dx + dy*dy ) ;
-   ////     if ( dr > 20 ) continue ;
-   ////     nhits_hcal ++ ;
-   ////     sumE_hcal += energy_hcal ;
-   ////     sumEx_hcal += energy_hcal * x ;
-   ////     sumEy_hcal += energy_hcal * y ;
-   ////  } // hi
          for ( int ni=0; ni<all_neighbors_hcal.size(); ni++ ) {
             int hi = all_neighbors_hcal.at(ni) ;
             float energy_hcal = fcs_rec_hcalE->at(hi) ;
@@ -583,6 +599,24 @@ void mip_search2::Loop( int max_evts, bool arg_verb )
             hcal_ecal_cos_angle = ( clusterx * cluster_dir_dx + clustery * cluster_dir_dy ) / ( cluster_ecal_Lxy * cluster_dir_Lxy ) ;
          }
 
+         int tmp_ecal_hit0ind(-1) ;
+         int tmp_ecal_hit1ind(-1) ;
+
+         int tmp_hcal_hit0ind(-1) ;
+         int tmp_hcal_hit1ind(-1) ;
+         int tmp_hcal_hit2ind(-1) ;
+         int tmp_hcal_hit3ind(-1) ;
+         int tmp_hcal_hit4ind(-1) ;
+
+         if ( cluster.size() > 0 ) tmp_ecal_hit0ind = cluster.at(0) ;
+         if ( cluster.size() > 1 ) tmp_ecal_hit1ind = cluster.at(1) ;
+
+         if ( all_neighbors_hcal.size() > 0 ) tmp_hcal_hit0ind = all_neighbors_hcal.at(0) ;
+         if ( all_neighbors_hcal.size() > 1 ) tmp_hcal_hit1ind = all_neighbors_hcal.at(1) ;
+         if ( all_neighbors_hcal.size() > 2 ) tmp_hcal_hit2ind = all_neighbors_hcal.at(2) ;
+         if ( all_neighbors_hcal.size() > 3 ) tmp_hcal_hit3ind = all_neighbors_hcal.at(3) ;
+         if ( all_neighbors_hcal.size() > 4 ) tmp_hcal_hit4ind = all_neighbors_hcal.at(4) ;
+
 
          tt_ecal_E.push_back( sumE ) ;
          tt_ecal_nhit.push_back( nhits ) ;
@@ -600,6 +634,17 @@ void mip_search2::Loop( int max_evts, bool arg_verb )
          tt_hcal_ecal_cos_angle.push_back( hcal_ecal_cos_angle ) ;
          tt_hcal_iso20.push_back( hcal_iso20 ) ;
          tt_hcal_iso30.push_back( hcal_iso30 ) ;
+
+         tt_ecal_hit0ind.push_back( tmp_ecal_hit0ind ) ;
+         tt_ecal_hit1ind.push_back( tmp_ecal_hit1ind ) ;
+
+         tt_hcal_hit0ind.push_back( tmp_hcal_hit0ind ) ;
+         tt_hcal_hit1ind.push_back( tmp_hcal_hit1ind ) ;
+         tt_hcal_hit2ind.push_back( tmp_hcal_hit2ind ) ;
+         tt_hcal_hit3ind.push_back( tmp_hcal_hit3ind ) ;
+         tt_hcal_hit4ind.push_back( tmp_hcal_hit4ind ) ;
+
+         tt_trk_index.push_back( trk_ind ) ;
 
 
 
@@ -625,6 +670,17 @@ void mip_search2::Loop( int max_evts, bool arg_verb )
       tt_hcal_ecal_cos_angle.clear() ;
       tt_hcal_iso20.clear() ;
       tt_hcal_iso30.clear() ;
+
+      tt_ecal_hit0ind.clear() ;
+      tt_ecal_hit1ind.clear() ;
+
+      tt_hcal_hit0ind.clear() ;
+      tt_hcal_hit1ind.clear() ;
+      tt_hcal_hit2ind.clear() ;
+      tt_hcal_hit3ind.clear() ;
+      tt_hcal_hit4ind.clear() ;
+
+      tt_trk_index.clear() ;
 
 
    } // jentry
